@@ -1,0 +1,50 @@
+# Données confidentielles, exports Survey Solutions et sorties locales
+Data/
+Analyse/outputs_provisoires/
+**/*.dta
+**/*.zip
+**/*.xlsx
+**/*.xls
+**/*.csv
+**/*.rds
+**/*.RData
+**/*.rda
+**/*.parquet
+
+# Documents binaires et sources institutionnelles non destinés au dépôt public
+**/*.docx
+**/*.doc
+**/*.pdf
+Ressources/
+Convention/
+OTF/
+Pricing/
+
+# Secrets et configuration locale
+.env
+.env.*
+*.env
+**/*credentials*.json
+**/*secret*.json
+**/*token*.json
+
+# Artefacts locaux
+*.log
+*.aux
+*.out
+*.toc
+*.synctex.gz
+*.Rhistory
+Rplots.pdf
+texput.log
+.claude/settings.local.json
+.codex/
+.opencode/state/
+.opencode/cache/
+MEMOIRE.md
+AGENTS.md
+
+# Systèmes / éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
