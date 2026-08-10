@@ -1,6 +1,9 @@
 # Données confidentielles, exports Survey Solutions et sorties locales
 Data/
 Analyse/outputs_provisoires/
+Analyse/suivi_qualite*/
+Analyse/miktex_cfg/
+Analyse/miktex_data/
 **/*.dta
 **/*.zip
 **/*.xlsx

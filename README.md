@@ -51,6 +51,17 @@ Rscript Analyse/R/00_preparer_export_v51.R <export.zip> <sortie.dta> <dossier_ra
 Les scripts d'indicateurs et d'estimation ne doivent être exécutés qu'après
 harmonisation des vagues et jonction de l'assignation officielle.
 
+## Dashboard de qualité
+
+Le dashboard agrégé de suivi de la collecte est publié sur
+[GitHub Pages](https://cae-ins.github.io/coso_project/). Son déploiement est
+déclenché uniquement par les pushes sur le dossier `/docs` de la branche
+`dashboard`. Les bases, les
+cas individuels et le rapport PDF restent hors du dépôt public.
+
+Le processus local est documenté dans
+`Analyse/Processus_Suivi_Qualite_Donnees_COSO.md`.
+
 ## Statut
 
 Le dépôt est une base de travail publique initialisée à partir de la version
