@@ -1,0 +1,2 @@
+"engine","output_status","source_sha256","raw_rows","section_views","questionnaire_rules_evaluated","proposed_business_rules_evaluated","automatic_corrections","questionnaire_scope","business_scope"
+"R","diagnostic_only","6F41BE295E312C22AF626A97B0C63FEBC4C5DA9C52764FE468D8F518E5377699",862,19,477,6,0,"interview__status == 100","interview__status == 100 & consentement == 1 & interview__key unique"

@@ -1,0 +1,16 @@
+"metric","value","source","correction_applied"
+"raw_rows",862,"donnee_systeme",FALSE
+"questionnaire_scope_status_100",481,"donnee_systeme",FALSE
+"metier_scope_status_100_consent_1_unique_key",441,"donnee_systeme",FALSE
+"duplicate_interview_key_rows",0,"donnee_systeme",FALSE
+"duplicate_cover_id_rows_raw",110,"donnee_systeme",FALSE
+"duplicate_cover_id_rows_metier_scope",43,"donnee_systeme",FALSE
+"age_outside_15_99_metier_scope",0,"metier_propose",FALSE
+"age_outside_15_35_metier_scope",111,"PAD/metier_propose",FALSE
+"g3_special_998_metier_scope",19,"questionnaire_code_special",FALSE
+"h5_special_999999_metier_scope",98,"questionnaire_code_special",FALSE
+"hours_over_84_metier_scope",17,"metier_propose",FALSE
+"h4a_over_100_metier_scope",3,"metier_propose",FALSE
+"h5_over_5m_excluding_special_metier_scope",0,"metier_propose",FALSE
+"q2_blank_metier_scope",19,"donnee_observee",FALSE
+"q2_non_numeric_nonblank_metier_scope",48,"donnee_observee/metier_propose",FALSE

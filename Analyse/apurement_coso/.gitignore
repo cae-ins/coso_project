@@ -1,0 +1,29 @@
+# Donnees et artefacts regenerables
+datain/staging/*
+datain/brute/*
+datain/standard/*
+dataout/standard/*
+dataout/final/*
+document/**/*.xlsx
+document/**/*.xls
+document/*.xlsx
+document/*.xls
+logs/*
+
+# Matrices et dictionnaires tracables du template
+!config/*.csv
+!generated/*.csv
+
+# Conserver l'architecture
+!datain/staging/.gitkeep
+!datain/brute/.gitkeep
+!datain/standard/.gitkeep
+!dataout/standard/.gitkeep
+!dataout/final/.gitkeep
+!document/.gitkeep
+!logs/.gitkeep
+
+# Fichiers temporaires
+*.tmp
+*.smcl
+*.log
