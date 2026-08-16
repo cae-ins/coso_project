@@ -1,0 +1,7 @@
+rule_id,section,variable,check_type,condition_stata,source_regle,decision_status,action_proposee,commentaire
+DEM_AGE_DOMAIN,C,age,domaine,"!missing(age) & (age < 15 | age > 99) & (analysis_eligible_provisoire == 1)",metier_propose,a_valider,export_excel_diagnostic,Age hors plage plausible 15-99
+DEM_AGE_TARGET,C,age,ciblage,"!missing(age) & (age < 15 | age > 35) & (analysis_eligible_provisoire == 1)",PAD/metier_propose,a_valider,revoir_ciblage,Age hors cible PAD provisoire 15-35
+EMP_HOURS_OVER_84,G,G3,plausibilite,"EMPLOYE == 1 & !missing(G3) & G3 <= 168 & (G3 + cond(G5 == 1 & !missing(G6) & G6 <= 168, G6, 0)) > 84 & (analysis_eligible_provisoire == 1)",metier_propose,a_valider,export_excel_diagnostic,Total hebdomadaire superieur a 84 heures
+EMP_H4A_LARGE,H,H4A,plausibilite,"EMPLOYE == 1 & inlist(F1,2,3) & !missing(H4A) & H4A > 100 & (analysis_eligible_provisoire == 1)",metier_propose,a_valider,export_excel_diagnostic,Nombre de travailleurs remuneres superieur a 100
+INCOME_H5_LARGE,H,H5,plausibilite,"EMPLOYE == 1 & inlist(F1,2,3,4) & !missing(H5) & H5 != 999999 & H5 > 5000000 & (analysis_eligible_provisoire == 1)",metier_propose,a_valider,export_excel_diagnostic,Montant H5 superieur a 5 millions FCFA
+COH_Q2_NUMERIC,Q,Q2,codification,"!missing(Q2) & trim(Q2) != """" & missing(real(trim(Q2))) & (analysis_eligible_provisoire == 1)",donnee_observee/metier_propose,a_valider,codification_manuelle,Q2 est textuelle dans le questionnaire mais l'indicateur envisage une frequence numerique
