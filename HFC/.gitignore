@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Fichiers temporaires Excel (verrous ouverts par Excel)
+~$*
+
+# Bases brutes exportees de Survey Solutions (re-exportables)
+Bases/Base_brute/
+
+# Sorties intermediaires Stata
+*.log
+*.smcl
