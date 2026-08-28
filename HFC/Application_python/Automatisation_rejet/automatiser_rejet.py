@@ -113,6 +113,12 @@ def today_str():
     return datetime.now().strftime("%d %b %Y")
 
 
+# Préambule ajouté au début du commentaire de rejet envoyé à l'agent.
+# Mettre à "" pour désactiver.
+PREAMBULE_REJET = ("Bonjour, votre entrevue a ete rejetee pour les raisons "
+                   "suivantes. Merci de la corriger puis de la re-soumettre :")
+
+
 # =============================================================================
 # 1. LOCALISATION DE LA BASE D'ERREURS
 # =============================================================================
@@ -168,9 +174,13 @@ def agreger_erreurs(df):
     """Regroupe les erreurs par entretien et construit le commentaire de rejet."""
     blocs = []
     for key, g in df.groupby("interview__key", sort=False):
-        erreurs = g.sort_values(["variable", "commentaire"])
+        erreurs = (g.sort_values(["variable", "commentaire"])
+                    .drop_duplicates(["variable", "commentaire"], keep="first"))
         lignes = [f"[{r['variable']}] {r['commentaire']}" for _, r in erreurs.iterrows()]
-        commentaire = "\n".join(lignes)
+        if PREAMBULE_REJET:
+            commentaire = PREAMBULE_REJET + "\n\n" + "\n".join(lignes)
+        else:
+            commentaire = "\n".join(lignes)
         # Contexte agent/superviseur (homogène pour un même entretien)
         nom_agent = erreurs["nom_agent"].dropna().iloc[0] if not erreurs["nom_agent"].eq("").all() else ""
         nom_sup   = erreurs["nom_sup"].dropna().iloc[0]   if not erreurs["nom_sup"].eq("").all()   else ""
