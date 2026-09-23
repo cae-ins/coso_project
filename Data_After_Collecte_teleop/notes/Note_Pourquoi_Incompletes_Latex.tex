@@ -1,0 +1,173 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black]{hyperref}
+
+\titleformat{\section}{\large\bfseries}{\thesection. }{0pt}{}
+\setstretch{1.12}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.25}
+
+\begin{document}
+
+% ======================= TITRE =======================
+\begin{center}
+  {\LARGE\bfseries POURQUOI 291 INTERVIEWS SONT INCOMPLETES\par}
+  \vspace{0.3em}
+  {\large et comment les rattraper\par}
+  \vspace{0.4em}
+  {\normalsize Note de diagnostic --- analyse de la completude logique COSO\par}
+\end{center}
+\vspace{0.5em}
+\hrule
+\vspace{0.8em}
+
+Sur les \textbf{1032 interviews} de la base finale : 627 completes,
+62 quasi-completes, \textbf{10 moyennes}, \textbf{291 incompletes} et
+42 vides. Cette note explique pourquoi les interviews des classes
+\textbf{4-INCOMPLET} (291) et \textbf{3-MOYEN} (10) sont incompletes, et
+quelles actions de rattrapage sont possibles.
+
+% ======================= 1. LES 291 =======================
+\section{Pourquoi les 291 interviews « 4-INCOMPLET » le sont}
+
+Elles n'ont repondu qu'a \textbf{1 a 29 questions} sur $\sim$65 attendues
+(moyenne 3,2). La progression section par section est sans ambiguite
+(tableau~\ref{tab:prog291}).
+
+\begin{table}[h]
+\centering
+\caption{Progression des 291 interviews incompletes par section.}
+\label{tab:prog291}
+\small
+\begin{tabular}{L{3.4cm}L{3.4cm}c}
+\toprule
+\textbf{Section} & \textbf{1re question} & \textbf{Interviews ayant repondu} \\
+\midrule
+A (contact)          & A1   & 97,3~\% \\
+B (identification)   & B1   & 100,0~\% \\
+C                    & C1   & 2,7~\%  \\
+D                    & D1   & 0,7~\%  \\
+E                    & E1   & 0,3~\%  \\
+EMPLOYE              & EMPLOYE & 0,7~\% \\
+F                    & F1   & 0,0~\%  \\
+G                    & G1   & 0,0~\%  \\
+H                    & H1   & 0,0~\%  \\
+J                    & J1   & 0,0~\%  \\
+K                    & K1   & 0,0~\%  \\
+L                    & L1   & 0,0~\%  \\
+M                    & M1   & 0,0~\%  \\
+N                    & N1   & 0,0~\%  \\
+O                    & O1   & 0,0~\%  \\
+P                    & P1   & 0,0~\%  \\
+Q                    & Q1   & 0,0~\%  \\
+R                    & R1   & 0,0~\%  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Lecture : les sections A (contact) et B (identification) sont
+remplies a presque 100~\%, puis tout s'arrete des le debut de la section
+C : seules \textbf{2,7~\%} des interviews ont une reponse a C1 (8 sur 291).
+Ce sont donc des \emph{abandons precoces} : l'interview a ete ouverte puis
+recloturee sans etre menee, et non des abandons en cours de questionnaire.
+
+La repartition par statut (tableau~\ref{tab:statut291}) montre que cela
+touche toutes les categories, y compris \textbf{78 interviews pourtant
+classees « validees »} (statut 100).
+
+\begin{table}[h]
+\centering
+\caption{Questions remplies dans les 291 interviews incompletes, par statut.}
+\label{tab:statut291}
+\small
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Statut} & \textbf{Nb interviews} & \textbf{min} & \textbf{moyenne} & \textbf{max} \\
+\midrule
+60 & 99  & 1 & 3,2 & 29 \\
+65 & 114 & 1 & 2,4 & 5  \\
+100 & 78 & 1 & 4,3 & 27 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Concernant le consentement : sur les 291, \textbf{107 ont consenti},
+29 ont refuse et 155 n'ont pas de reponse de consentement enregistree. Sans
+consentement, aucun recontact legal ; avec consentement, un rappel est
+theoriquement possible.
+
+% ======================= 2. LES 10 =======================
+\section{Pourquoi les 10 interviews « 3-MOYEN » le sont}
+
+Profil inverse : elles sont allees loin (de 43 a 90 questions remplies sur
+$\sim$90 attendues, moyenne 69) mais ont abandonne sur les sections de fin
+(tableau~\ref{tab:prog10}).
+
+\begin{table}[h]
+\centering
+\caption{Progression des 10 interviews moyennes par section.}
+\label{tab:prog10}
+\small
+\begin{tabular}{L{3.4cm}L{3.4cm}c}
+\toprule
+\textbf{Section} & \textbf{1re question} & \textbf{Interviews ayant repondu} \\
+\midrule
+A, B, C, D, E, EMPLOYE, H, K & -- & 100,0~\% \\
+L & L1 & 90,0~\% \\
+M & M1 & 70,0~\% \\
+N & N1 & 70,0~\% \\
+F, G, I & F1, G1 & 60,0~\% \\
+J & J1 & 30,0~\% \\
+O & O1 & 50,0~\% \\
+Q & Q1 & 50,0~\% \\
+R & R1 & 40,0~\% \\
+P & P1 & 0,0~\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Lecture : sections A a E, EMPLOYE, H et K remplies a 100~\% ; les
+sections de la fin (O, P, Q, R notamment) ne sont remplies qu'a 40--60~\%.
+Bilan : ce sont de vrais abandons en fin de questionnaire, sur des blocs
+conditionnels et les observations de l'enqueteur.
+
+% ======================= 3. RATTRAPAGE =======================
+\section{Comment rattraper (selon la classe)}
+
+\begin{table}[h]
+\centering
+\caption{Actions de rattrapage par classe de completude.}
+\label{tab:rattrapage}
+\small
+\begin{tabular}{L{4.2cm}L{4.6cm}L{5.2cm}}
+\toprule
+\textbf{Classe} & \textbf{Etat} & \textbf{Action de rattrapage} \\
+\midrule
+2-QUASI\_COMPLET (62)   & il manque 1 a 3 questions &
+  recontact cible : relancer precise-ment les questions manquantes \\
+3-MOYEN (10)            & fin de questionnaire non passee &
+  recontact cible de la fin (sections O a R) --- petit volume, realisable \\
+4-INCOMPLET (291)       & reponses presque inexistantes &
+  recontact complet si consentement (107) sinon exclusion de l'analyse \\
+5-VIDE (42)             & aucun champ exploitable &
+  exclusion de l'analyse \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Ouverture pratique : pour les interviews a relancer, la liste
+exacte des identifiants et des questions manquantes est dans le fichier
+\texttt{resultats/manquants\_id\_detail.xlsx} (filtrer par classe puis par
+\texttt{interview\_\_id}).
+
+\end{document}

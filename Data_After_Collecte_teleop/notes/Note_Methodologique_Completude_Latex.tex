@@ -1,0 +1,248 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black]{hyperref}
+
+\titleformat{\section}{\large\bfseries}{\thesection. }{0pt}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection. }{0pt}{}
+
+\setstretch{1.15}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+
+\begin{document}
+
+% ======================= TITRE =======================
+\begin{center}
+  {\LARGE\bfseries NOTE METHODOLOGIQUE\par}
+  \vspace{0.4em}
+  {\large Analyse de la completude logique des interviews COSO\par}
+  \vspace{0.3em}
+  {\normalsize Base $\rightarrow$ \texttt{Questionnaire\_COSO\_VF.dta} (1032 interviews)\par}
+\end{center}
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+La presente note decrit la methode utilisee pour determiner, parmi les
+\textbf{1032 interviews} de la base, celles qui sont reellement et
+totalement remplies au regard de la logique conditionnelle du questionnaire.
+Le detail des questions manquantes a l'echelle de chaque interview
+(identifiant + question concernee) est fourni dans le fichier Excel joint :
+\texttt{manquants\_id\_detail.xlsx}.
+
+% ======================= 1. QUESTION DE DEPART =======================
+\section{Question de depart}
+
+Combien d'interviews sont completement realisees ? Dans un questionnaire a
+logique de saut, certaines questions ne sont posees qu'en fonction des
+reponses anterieures. Une interview est dite \emph{complete} lorsque toutes
+les questions qui devaient lui etre posees --- compte tenu des reponses
+precedentes --- ont effectivement recu une reponse. A l'inverse, une
+interview interrompue se reconnait a des questions attendues mais laissees
+vides (abandon, refus, erreur de collecte).
+
+% ======================= 2. PRINCIPE =======================
+\section{Principe de la methode}
+
+Pour chaque interview $i$, on reconstitue l'ensemble $Q(i)$ des questions
+qui devaient lui etre posees en appliquant la logique de saut du
+questionnaire (sections A a R). On compte ensuite les questions attendues
+qui ont reellement une reponse non vide. Le taux de completude vaut :
+%
+\begin{center}
+  $\displaystyle
+  \text{taux\_completude}(i) \;=\;
+  \frac{\text{nombre de questions attendues et repondues}}{|Q(i)|}
+  $
+\end{center}
+
+Deux precautions sont prises. D'une part, une reponse n'est comptee que si
+la cellule contient une \emph{vraie} valeur : la base comporte des chaines
+vides \texttt{""} ou \texttt{.} qui ne sont pas \texttt{NaN} et ne doivent
+pas etre confondues avec une reponse. D'autre part, les champs techniques
+(horodatages, coordonnees GPS), les champs d'identification et les champs
+libres non soumis a la logique (C6, C9, C10, C11) sont exclus du calcul.
+
+% ======================= 3. LOGIQUE DE SAUT =======================
+\section{Logique de saut retenue}
+
+Chaque regle est deduite du questionnaire Draft 8 et verifiee sur les
+donnees. Les principales regles sont synthetisees dans le
+tableau~\ref{tab:regles}.
+
+\begin{table}[h]
+\centering
+\caption{Principales regles de saut du questionnaire.}
+\label{tab:regles}
+\small
+\begin{tabular}{L{1.6cm}L{4.4cm}L{6.8cm}}
+\toprule
+\textbf{Section} & \textbf{Champ} & \textbf{Condition d'attente} \\
+\midrule
+A & A1, A4 (resultat de l'appel) & toutes les interviews \\
+A & A4X (preciser le resultat)    & si A4 = autre (8) \\
+A & A5 (jour / heure de rendez-vous) & si A4 = prise de rendez-vous (5) \\
+C & C5 (diplome)                  & si niveau d'etudes au moins primaire (C4 $\geq$ 2) \\
+C & C8 (pays)                     & si C7 = Cote d'Ivoire (1) \\
+E & E2, E3, E3A                   & E2 si E1 = non ; E3 si E2 = non ; E3A si E3 = oui \\
+F,G,H,I & section emploi           & si la personne a une activite (EMPLOYE = 1) \\
+H & H1 a H3 (salaires)            & si salarie (F1 = 1) \\
+H & H3A (classe de salaire)       & si montant refuse (H3 = 99999) \\
+H & H4, H5 (revenus)              & si non salarie (F1 = 2, 3 ou 4) \\
+H & H5A (classe de revenu)        & si montant refuse (H5 = 999999) \\
+J & toute la section              & si sans activite (EMPLOYE = 0) \\
+K & K2, K3                        & K2 si K1 = non ; K3 si K1 = oui \\
+K & K4, K5, K5X                   & si K2 = oui ; K5X si K5 = autre \\
+L & L4, L5 (epargne)              & si L3 = oui \\
+L & L7 a L9 (dette)               & si L6 = oui \\
+N & N2 a N5 (chocs)               & si N1 = oui \\
+O & O2 (formation)                & si O1 = oui ; O4-O6 si O3 = oui \\
+R & R1A, R2A, R3A, R3B            & si le code correspondant est choisi \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ======================= 4. VALIDATION =======================
+\section{Validation statistique de la methode}
+
+Reconstruire une logique de saut comporte un risque : imaginer des regles
+trop strictes (qui penaliseraient des interviews completes) ou trop
+laxistes (qui masqueraient des abandons). Pour controler ce risque, les
+regles sont testees sur un groupe de reference objectif : les interviews
+validees par le superviseur et dont le questionnaire est rempli
+(\texttt{interview\_\_status} = 100 et A4 = 1), soit \textbf{425 interviews}.
+Ce groupe de reference n'entre \emph{pas} dans le calcul du taux : il sert
+uniquement de metre etalon. Si la reconstruction est exacte, quasi toutes
+doivent atteindre 100~\%.
+
+\begin{table}[h]
+\centering
+\caption{Statistiques de validation sur les 425 references.}
+\label{tab:validation}
+\small
+\begin{tabular}{L{8.4cm}c}
+\toprule
+\textbf{Indicateur de validation} & \textbf{Valeur} \\
+\midrule
+Interviews de reference (metre etalon)                & 425 \\
+dont taux de completude $= 100\%$                     & 406  (95,5~\%) \\
+mediane du taux                                       & 1,000 \\
+moyenne du taux                                       & 0,997 \\
+minimum / maximum du taux                             & 0,062 / 1,000 \\
+references sous 90~\%                                 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Un taux median de \textbf{1,000} et \textbf{95,5~\%} de references a
+exactement 100~\% confirment que la logique retenue reproduit le
+questionnaire reellement applique : elle n'est ni trop stricte, ni trop
+laxiste.
+
+% ======================= 5. CLASSIFICATION =======================
+\section{Classification des interviews}
+
+A partir du taux de completude, chaque interview est rangee dans l'une des
+cinq classes suivantes.
+
+\begin{table}[h]
+\centering
+\caption{Classes de completude et intervalles du taux.}
+\label{tab:classes}
+\small
+\begin{tabular}{L{3.4cm}L{4.0cm}L{5.4cm}}
+\toprule
+\textbf{Classe} & \textbf{Intervalle du taux} & \textbf{Lecture} \\
+\midrule
+1-COMPLET       & taux $= 100\%$                & aucune question attendue vide \\
+2-QUASI\_COMPLET & 90~\% $\leq$ taux $< 100\%$  & quasi tout est rempli, quelques manques \\
+3-MOYEN         & 50~\% $\leq$ taux $< 90\%$   & une partie notable est vide \\
+4-INCOMPLET     & 0~\% $<$ taux $< 50\%$       & la majorite des questions attendues sont vides \\
+5-VIDE          & taux $= 0\%$                 & aucune question exploitable repondue \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ======================= 6. RESULTATS =======================
+\section{Resultats}
+
+\subsection{Repartition des 1032 interviews}
+
+Le tableau~\ref{tab:repartition} presente la repartition des cinq classes.
+
+\begin{table}[h]
+\centering
+\caption{Repartition des interviews par classe de completude.}
+\label{tab:repartition}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Classe} & \textbf{Effectif} & \textbf{Part} \\
+\midrule
+1-COMPLET       & 627 & 60,8~\% \\
+2-QUASI\_COMPLET & 62  & 6,0~\% \\
+3-MOYEN         & 10  & 1,0~\% \\
+4-INCOMPLET     & 291 & 28,2~\% \\
+5-VIDE          & 42  & 4,1~\% \\
+\midrule
+TOTAL           & 1032 & 100,0~\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Le taux moyen global est de \textbf{0,686} et la mediane de \textbf{1,000}.
+Reponse a la question de depart : \textbf{627 interviews (60,8~\%)} sont
+totalement remplies, c'est-a-dire que toutes les questions attendues selon
+la logique du questionnaire ont ete repondues. En y ajoutant les
+quasi-completes, la base << fiable >> compte \textbf{689 interviews
+(66,7~\%)}.
+
+% ======================= 7. EXCEL =======================
+\section{Exploitation du fichier Excel joint}
+
+\paragraph{Le detail.}
+Le fichier \texttt{manquants\_id\_detail.xlsx} contient une ligne par couple
+(interview ; question manquante), avec l'identifiant de l'interview
+(\texttt{interview\_\_id} / \texttt{interview\_\_key}), la classe de
+completude et la question concernee. Il permet de :
+\begin{itemize}
+  \item filtrer par classe (ex. \texttt{4-INCOMPLET} ou \texttt{5-VIDE}) ;
+  \item recuperer la liste des identifiants d'interviews a revoir, a
+        recontacter ou a relancer ;
+  \item mesurer, pour une question donnee, combien d'interviews la laissent
+        vide.
+\end{itemize}
+
+\paragraph{La base.}
+La base \texttt{Questionnaire\_COSO\_VF\_avec\_completude.dta} associe en
+outre a chaque interview deux colonnes filtrables :
+\texttt{taux\_completude} (proportion de 0 a 1) et
+\texttt{classe\_completude} (de \texttt{1-COMPLET} a \texttt{5-VIDE}).
+
+% ======================= 8. LIMITES =======================
+\section{Limites et precautions}
+
+\begin{itemize}
+  \item Un champ << preciser >> facultatif (ex. \texttt{K5X}) peut manquer
+        sans que le questionnaire soit reellement inacheve ; la classe
+        \texttt{2-QUASI\_COMPLET} permet de recuperer ces cas.
+  \item Les 425 references confirment empiriquement la validite de la
+        logique, mais ne constituent pas une demonstration mathematique. La
+        confiance provient de la convergence entre la logique du
+        questionnaire et le comportement observe des donnees.
+  \item La completude mesure que tout est repondu, pas la qualite des
+        reponses : une valeur aberrante reste une valeur presente. Une etape
+        complementaire serait necessaire pour verifier la coherence interne
+        des reponses.
+\end{itemize}
+
+\end{document}

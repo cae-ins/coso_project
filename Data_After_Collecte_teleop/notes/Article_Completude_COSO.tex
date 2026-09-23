@@ -1,0 +1,232 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{sectsty}
+\usepackage{setspace}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black]{hyperref}
+\usepackage{titlesec}
+
+\allsectionsfont{\bfseries}
+\titleformat{\section}{\normalsize\bfseries}{\arabic{section}.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\arabic{section}.\arabic{subsection}}{0.5em}{}
+\setstretch{1.2}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{document}
+
+% ======================= ARTICLE =======================
+\begin{center}
+  {\LARGE\bfseries La completude logique des interviews COSO\par}
+  \vspace{0.5em}
+  {\normalsize Une mesure de la fiabilite de la collecte par reconstruction
+            des questions attendues\par}
+  \vspace{1.2em}
+  {\normalsize \textbf{Note d'analyse} --- Enquete COSO, base
+            \texttt{Questionnaire\_COSO\_VF.dta} (1032 interviews)\par}
+\end{center}
+\vspace{1.2em}
+
+% ---------------- RESUME ----------------
+\noindent\begin{minipage}{\textwidth}
+\textbf{Resume.} Dans les enquetes a logique de saut, le taux de reponse
+brut ne renseigne pas sur la qualite reelle de la collecte : une interview
+``complete'' au sens administratif peut laisser vides des questions qui
+devaient pourtant etre posees. Cette note reconstruit, pour chaque
+interview, l'ensemble des questions attendues au regard des reponses
+anterieures, puis mesure combien d'entre elles ont reellement recu une
+reponse. La methode est validee sur un groupe de reference de
+425 interviews controles par le superviseur. Les resultats indiquent que
+\textbf{627 des 1032 interviews (60,8~\%) sont totalement remplies}, et que
+rejoindre les quasi-completes porte la base fiable a 689 interviews.
+La methode fournit aussi, pour chaque interview et chaque question, la
+liste des manques, exploitable pour cibler des questionnaires a revoir.
+
+\vspace{0.4em}
+\textbf{Mots-cles :} completude ; logique de saut ; qualite de la collecte ;
+enquete menages ; COSO.
+\end{minipage}
+
+\vspace{1.2em}
+\hrule
+\vspace{1.2em}
+
+% ----------------- 1. INTRODUCTION -----------------
+\section{Introduction et question}
+
+Dans une enquete a questionnaires complexes, certaines questions ne sont
+posees que lorsque la reponse a une question anterieure le justifie
+(saut conditionnel). Le simple fait qu'une interview soit cataloguee comme
+``conduite jusqu'au bout'' ne garantit pas que toutes les questions
+obligatoires ont ete repondues : des abandons partiels, des refus locaux ou
+des erreurs de saisie laissent des cellules vides la ou une reponse etait
+attendue.
+
+La question que se pose l'etude est donc : \emph{combien d'interviews sont,
+sous la logique du questionnaire, totalement remplies ?} La reponse importe
+pour la fiabilite des analyses : une base melee d'interviews completes et
+incompletes biaise les statistiques par une absence non aleatoire de
+reponses.
+
+% ----------------- 2. DONNEES ET METHODE -----------------
+\section{Donnees et methode}
+
+\subsection{Donnees}
+
+La base d'etude contient \textbf{1032 interviews}. Elle est issue de la
+fusion des versions 4 et 5 du questionnaire et comporte 218 variables.
+Deux elements de la collecte sont exploites pour la validation : le statut
+de l'interview (\texttt{interview\_\_status}) et le resultat de l'appel
+(A4), sans que ces deux variables n'entrent dans le calcul du taux de
+completude lui-meme.
+
+\subsection{Taux de completude}
+
+Pour chaque interview $i$, on reconstruit l'ensemble $Q(i)$ des questions
+attendues selon la logique de saut, puis on calcule :
+%
+\begin{center}
+  $\displaystyle \text{taux}(i)=\frac{\text{nombre de questions attendues et
+  repondues}}{|Q(i)|}$. \qquad (1)
+\end{center}
+
+Une reponse n'est comptee que si la cellule est non vide au sens strict :
+les chaines vides \texttt{""} ou \texttt{.} --- presentes dans la base sans
+etre des valeurs manquantes --- sont traitees comme des absences de
+reponse. Les champs techniques et les champs libres hors logique (C6, C9,
+C10, C11) sont exclus.
+
+\subsection{Validation}
+
+La reconstruction des regles comporte un risque d'erreur dans les deux
+sens (regles trop strictes ou trop laxistes). Un \emph{metre etalon} est
+donc constitue : les interviews validees par le superviseur et reellement
+conduites (statut 100 et A4 = 1), soit 425 interviews. Ce groupe sert
+uniquement a controler la methode : il est exclu du calcul des taux.
+Si la reconstruction est juste, ces interviews doivent presque toutes
+atteindre 100~\%.
+
+% ----------------- 3. RESULTATS -----------------
+\section{Resultats}
+
+\subsection{Validite de la methode}
+
+Le tableau~\ref{tab:valid} resume la validation sur les 425 references.
+Le taux median de 1,000 et la proportion de 95,5~\% de references
+exactement a 100~\% valident la reconstruction : la logique implantee n'est
+ni trop stricte (sinon les references echoueraient), ni trop laxiste
+(sinon elles seraient encore plus nombreuses a 100~\% sans que ce soit
+justifie).
+
+\begin{table}[h]
+\centering
+\caption{Validation sur le groupe de reference ($n=425$).}
+\label{tab:valid}
+\small
+\begin{tabular}{L{8.4cm}c}
+\toprule
+\textbf{Indicateur} & \textbf{Valeur} \\
+\midrule
+References (statut 100 et A4 = 1)              & 425 \\
+dont taux $= 100\%$                             & 406  (95,5~\%) \\
+mediane du taux                                 & 1,000 \\
+moyenne du taux                                 & 0,997 \\
+references sous 90~\%                           & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Repartition des interviews}
+
+Le tableau~\ref{tab:classe} definit les cinq classes de completude ; le
+tableau~\ref{tab:rep} en dresse le bilan sur les 1032 interviews.
+
+\begin{table}[h]
+\centering
+\caption{Classes de completude et intervalles.}
+\label{tab:classe}
+\small
+\begin{tabular}{L{3.4cm}L{4.0cm}L{5.2cm}}
+\toprule
+\textbf{Classe} & \textbf{Intervalle} & \textbf{Lecture} \\
+\midrule
+1-COMPLET        & taux $=100\%$               & aucune question attendue vide \\
+2-QUASI\_COMPLET & $90\% \leq$ taux $<100\%$   & quelques manques residuels \\
+3-MOYEN          & $50\% \leq$ taux $<90\%$    & une partie notable est vide \\
+4-INCOMPLET      & $0\% <$ taux $<50\%$        & majorite des questions attendues vides \\
+5-VIDE           & taux $=0\%$                 & aucune question exploitable \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Repartition des 1032 interviews.}
+\label{tab:rep}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Classe} & \textbf{Effectif} & \textbf{Part} \\
+\midrule
+1-COMPLET        & 627 & 60,8~\% \\
+2-QUASI\_COMPLET & 62  & 6,0~\% \\
+3-MOYEN          & 10  & 1,0~\% \\
+4-INCOMPLET      & 291 & 28,2~\% \\
+5-VIDE           & 42  & 4,1~\% \\
+\midrule
+TOTAL            & 1032 & 100,0~\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Le taux moyen est de 0,686 et la mediane de 1,000 : la distribution est
+fortement biconnectee, avec une majorite d'interviews parfaitement
+completes et une minorite quasi vides, refleterant des abandons precoces.
+
+% ----------------- 4. DISCUSSION -----------------
+\section{Discussion}
+
+Le principal resultat est que \textbf{627 interviews (60,8~\%) sont
+totalement remplies}, et que la base fiable (completes + quasi-completes)
+reunit \textbf{689 interviews (66,7~\%)}. Ce bilan, plus exigeant que le
+simple critere de consequence administrative, montre la valeur ajoutee
+d'une mesure de completude : elle qualifie precisement ce qui est exploitable
+au regard de la logique du questionnaire.
+
+L'analyse identifie aussi, pour chaque interview, la liste exacte des
+questions attendues et restees vides. Cette information permet de cibler,
+par classe et par identifiant (\texttt{interview\_\_id} /
+\texttt{interview\_\_key}), les questionnaires a revoir ou a recontacter,
+et de reperer les questions les plus souvent laissees vides.
+
+Le choix d'une mesure en flux (100~\% = complet === reste sont des
+intervalles de tolerance) reste conventionnel : la classe
+\texttt{2-QUASI\_COMPLET} (au moins 90~\%) offre un seuil pragmatique, car
+certains champs << preciser >> facultatifs peuvent manquer sans que le
+questionnaire soit reellement inacheve.
+
+% ----------------- 5. CONCLUSION -----------------
+\section{Conclusion}
+
+La reconstruction de la logique conditionnelle du questionnaire COSO, puis
+sa validation statistique sur 425 references controlees, permettent de
+classifier les 1032 interviews en cinq niveaux de completude. La methode
+repond a la question initiale --- 627 interviews totalement remplies --- et
+fournit un outil operationnel (base filtrable et fichier Excel de detail)
+pour la suite de l'exploitation des donnees.
+
+\begin{thebibliography}{9}
+\bibitem{coso}
+  COSO. \emph{Questionnaire d'enquete --- Draft 8}, dossier
+  \texttt{Outils\_de\_Collecte}, version 4-5 fusionnee.
+\end{thebibliography}
+
+\end{document}

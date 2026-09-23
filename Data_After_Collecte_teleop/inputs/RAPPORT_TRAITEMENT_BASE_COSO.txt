@@ -1,0 +1,106 @@
+=====================================================================
+RAPPORT DE TRAITEMENT DE LA BASE COSO  (Questionnaire_COSO_VF.dta)
+Date : 15 Septembre 2026
+=====================================================================
+
+---------------------------------------------------------------------
+1. CONTEXTE
+---------------------------------------------------------------------
+Deux bases d'enquête téléphonique (menages) existent :
+  - Questionnaire_COSO_V4.dta : 284 lignes, 214 colonnes
+  - Questionnaire_COSO_V5.dta : 1032 lignes, 218 colonnes
+
+Objectif : produire une base de reference fiable (V5) en recuperant
+dans V4 les informations qui manquent, puis completer les variables
+de localisation du questionnaire avec les infos prechargees du cover.
+
+---------------------------------------------------------------------
+2. VERIFICATION DES DOUBLONS
+---------------------------------------------------------------------
+Clé menage utilisee : nom + telephone + localite (harmonises : minuscules,
+espaces retires).
+
+  V4 : 284 lignes mais 282 menages distincts (2 doublons internes)
+  V5 : 1032 lignes mais 1016 menages distincts (16 doublons internes)
+
+  Menages de V4 presents dans V5 : 282 sur 282 (100 %)
+  => V4 ne contient AUCUN menage nouveau : faire un simple append
+     aurait double tous les menages.
+
+Contenu des lignes communes : 0 menage sur 282 est identique ligne a ligne.
+Les reponses different car il s'agit de passages/versions differentes du
+questionnaire (identifiants, horodatages et reponses differents).
+
+---------------------------------------------------------------------
+3. IMPUTATION V4 -> V5  (dans le script append-and-clean-v4_v5.py)
+---------------------------------------------------------------------
+Principe : pour les 282 menages communs, si une case est vide dans V5
+et remplie dans V4, on la copie de V4 vers V5.
+
+  Cases vides de V5 completees depuis V4 : 2921
+
+Note technique : pour aligner les valeurs, il faut passer par l'index
+(v5.set_index('cle_menage') puis reindex), pas par une Série.
+
+---------------------------------------------------------------------
+4. COMPLETION DES VARIABLES DE LOCALISATION DEPUIS LE COVER
+---------------------------------------------------------------------
+Dans le cover (precharge 100 %) :
+  - cover_district (ex : "SAVANES")  -> B1  (code district, ex : 111)
+  - cover_region   (ex : "GONTOUGO") -> B2  (code region, determiné par
+                                  le mariage code <-> libelle des labels)
+
+Resultats :
+  B1 (District)     : 239 manquants -> 0   (impute depuis cover_district)
+  B2 (Region)       : 240 manquants -> 0   (impute depuis cover_region)
+  B3 (Departement)  : 252 manquants -> 252 (non imputable : se calcule
+                                    depuis B4, or B4 est aussi vide)
+  B4 (Sous-pref.)   : 255 manquants -> 255 (pas dans le cover)
+
+---------------------------------------------------------------------
+5. CONTROLE QUALITE : INCOHERENCES RELEVEES
+---------------------------------------------------------------------
+En comparant les valeurs DEJA REMPLIES (pas les manquantes) du
+questionnaire avec le cover, on detecte des incoherences :
+
+  B1 (District) != cover_district : 5 lignes
+  B2 (Region)   != cover_region   : 10 lignes
+
+Exemple : interview 97-40-78-65 (TIENGUELE)
+  cover : DENGUELE / KABADOUGOU
+  quest : ZANZAN   / BOUNKANI
+  => probable erreur de saisie de l'enqueteur.
+
+DECISION A PRENDRE : laisser tel quel, corriger depuis le cover,
+ou marquer ces lignes par une variable flag_incoherence.
+
+---------------------------------------------------------------------
+6. ETAT DES STATUTS DANS LA BASE VF
+---------------------------------------------------------------------
+interview__status  (statut Survey Solutions) :
+  100 Completed (enquete terminee)            : 524
+   65 RejectedBySupervisor (rejetee)          : 362
+   60 InterviewerAssigned (pas terminee)      : 146
+
+A4 (resultat de l'appel) :
+    1 Entretien realise                                  : 662
+    2 Pas de reponse                                     :  64
+    3 Numero invalide ou incorrect                       :  53
+    4 Ligne occupee                                      :  48
+    5 Rendez-vous fixe pour un rappel                    :   3
+    6 Le repondant a refuse de participer                :   7
+    7 Raccroche / appel interrompu                       :   0
+    8 Autre (preciser)                                   : 130
+    (vide)                                               :  65
+
+consentement : 1 = oui (805), 0 = non (30), vide (197)
+
+has__errors : 1 interview porte des erreurs de validation.
+
+=====================================================================
+NOTE SUR B3 / B4
+=====================================================================
+B3 (departement) et B4 (sous-prefecture) ne peuvent PAS etre
+reconstruits depuis le cover : le cover ne contient que
+cover_id, cover_district et cover_region. Ils restent donc
+a completer manuellement ou a partir d'une autre source.
