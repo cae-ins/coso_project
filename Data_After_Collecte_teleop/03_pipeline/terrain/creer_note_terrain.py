@@ -7,11 +7,11 @@ from docx_sobre import Note
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-OUT  = os.path.join(RACINE, "MIGONE", "resultats_croisement", "Note_CANDIDAT_ENQUETE_TERRAIN.docx")
+OUT  = os.path.join(RACINE, "04_resultats", "migone", "resultats_croisement", "Note_CANDIDAT_ENQUETE_TERRAIN.docx")
 
-avec, _ = pyreadstat.read_dta(os.path.join(RACINE, "resultats", "Questionnaire_COSO_VF_avec_completude.dta"))
-final, _ = pyreadstat.read_dta(os.path.join(RACINE, "resultats", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"))
-terr = pd.read_excel(os.path.join(RACINE, "MIGONE", "outputs", "CANDIDAT_ENQUETE_TERRAIN.xlsx"), sheet_name="Enquete terrain")
+avec, _ = pyreadstat.read_dta(os.path.join(RACINE, "04_resultats", "traitement", "Questionnaire_COSO_VF_avec_completude.dta"))
+final, _ = pyreadstat.read_dta(os.path.join(RACINE, "04_resultats", "traitement", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"))
+terr = pd.read_excel(os.path.join(RACINE, "04_resultats", "migone", "outputs", "CANDIDAT_ENQUETE_TERRAIN.xlsx"), sheet_name="Enquete terrain")
 
 g = avec.groupby("cover_id").size().value_counts().sort_index()
 

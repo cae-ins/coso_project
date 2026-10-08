@@ -1,156 +1,159 @@
-# Analyse de la completude logique des interviews COSO + affectation terrain (MIGONE)
+# Analyse COSO : complétude, dédoublonnage et indicateurs
 
-Ce dossier retrace l'analyse realisee sur la base `Questionnaire_COSO_VF.dta`
-(1032 interviews) visant a repondre a la question :
+Ce dossier retrace toute la chaîne de traitement des données de l'enquête
+téléphonique COSO, de la base de départ jusqu'aux indicateurs calculés :
 
-> **Combien d'interviews sont reellement totalement remplies, en tenant
-> compte de la logique conditionnelle du questionnaire ?**
-
-et la preparation de l'affectation terrain des candidats aux enqueteurs.
+```
+01_sources/ + 02_bases/                base de départ
+        │
+        ▼  03_pipeline/01 … 06         complétude logique, notes, rattrapage, dédoublonnage
+        │
+04_resultats/traitement/
+   QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta   base dédoublonnée (962 entretiens)
+        │
+        ▼  03_pipeline/07 … 11         apurement, calcul des indicateurs, Excel, Word, contrôle
+        │
+04_resultats/indicateurs/              Excel des indicateurs + rapport Word explicatif
+```
 
 ## Arborescence
 
 ```
 Data_After_Collecte_teleop/
-├── README.md
-├── scripts/
-│   ├── pipeline/                        <- pipeline d'analyse de completude
-│   │   ├── 01_completude_logique.py     <- le calcul complet (simple, commente)
-│   │   ├── 02_generer_notes.py          <- cree la note Word + PDF (relance le calcul)
-│   │   ├── 03_lire_verifier_bases.py    <- lit et verifie toutes les bases (controle)
-│   │   ├── 04_generer_note_manques.py   <- note "Pourquoi incompletes"
-│   │   ├── 05_generer_rattrapage.py     <- fichier de rattrapage terrain
-│   │   ├── 06_pipeline_doublons.py      <- dedoublonnage + fichiers de travail
-│   │   └── heritage/                    <- anciens scripts (archives, non relances)
-│   └── terrain/                         <- scripts MIGONE (terrain)
-│       ├── affectation_terrain.py       <- affectation candidats/enqueteurs (V1 + V2)
-│       ├── creer_base_terrain.py        <- base CANDIDAT_ENQUETE_TERRAIN
-│       ├── creer_note_terrain.py        <- note CANDIDAT_ENQUETE_TERRAIN
-│       ├── croisement_migone.py         <- croisement des listes MIGONE/COSO
-│       └── croisement_migone_jaures.py  <- variante Jaures
-├── bases/                     <- toutes les bases .dta utilisees (copies)
-├── inputs/                    <- fichiers sources (affectation, contacts, projet...)
-├── resultats/                 <- sorties du pipeline (dta, csv, xlsx)
-│   ├── QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta   <- base dedoublonnee (962 interviews)
-│   ├── Questionnaire_COSO_VF_avec_completude.dta
-│   ├── manquants_par_classe.csv / recap_classes.csv
-│   ├── manquants_id_detail.xlsx
-│   └── fichiers xlsx de decision (318, 329, rattrapage...)
-├── notes/                     <- notes Word/PDF/LaTeX de l'analyse
-└── MIGONE/
-    ├── outputs/               <- affectations terrain + base candidate enquete
-    │   ├── AFFECTATION_COSO_TERRAIN_VF.xlsx  (liste definitive COMPTE_AGENT_COSO_VF)
-    │   ├── CANDIDAT_ENQUETE_TERRAIN.xlsx
-    │   └── QUESTIONNAIRE_VF_SANS_DOUBLON_VF.xlsx
-    └── resultats_croisement/ <- croisements MIGONE (csv 01-06, xlsx 07-11, note)
+├── README.md                     <- ce fichier (chaîne complète)
+├── 01_sources/                   <- BASE DE DÉPART : fichiers projet, contacts, affectation
+├── 02_bases/                     <- bases .dta intermédiaires puis finale
+│   ├── Questionnaire_COSO_V5.dta             (1032 x 218, protocole final)
+│   ├── Questionnaire_COSO_VF.dta             (1032 x 218, fusion V4+V5)
+│   ├── Questionnaire_COSO_VF_avec_completude.dta  (BASE FINALE + taux/classe)
+│   └── QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta  (copie de travail dédoublonnée)
+├── 03_pipeline/                   <- CODE DE TRAITEMENT, dans l'ordre d'exécution
+│   ├── 01_completude_logique.py     completude logique (skip logic) → resultats/traitement
+│   ├── 02_generer_notes.py          note Word/PDF de completude
+│   ├── 03_lire_verifier_bases.py    contrôle des 8 bases (lecture seule)
+│   ├── 04_generer_note_manques.py   note « Pourquoi incomplètes »
+│   ├── 05_generer_rattrapage.py     fichier de rattrapage terrain
+│   ├── 06_pipeline_doublons.py      dédoublonnage → QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta
+│   ├── 07_apurement_indicateurs.py  filtre population → base_apuree.csv + meta
+│   ├── 08_calcul_indicateurs.py     calcul de tous les indicateurs → indicateurs.json
+│   ├── 09_excel_indicateurs.py      classeur Excel multi-feuilles
+│   ├── 10_rapport_indicateurs.py    rapport Word explicatif
+│   ├── 11_verifier_indicateurs.py   contrôles de cohérence des livrables
+│   ├── executer.sh                  lance 01 → 11 d'un coup
+│   ├── README.md                    table des étapes 01 → 11
+│   ├── rapport_methodologique.md    définitions, formules, limites
+│   ├── heritage/                    anciens scripts (archives, non relancés)
+│   └── terrain/                     scripts terrain (MIGONE)
+├── 04_resultats/
+│   ├── traitement/                  sorties des étapes 01 → 06
+│   │   ├── QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta   BASE DÉDOUBLONNÉE (962)
+│   │   ├── Questionnaire_COSO_VF_avec_completude.dta
+│   │   ├── manquants_*.csv / recap_classes.csv / fichiers xlsx de décision
+│   │   └── (étape 07) base_apuree.csv + meta_apurement.json
+│   ├── indicateurs/                 sorties des étapes 07 → 11
+│   │   ├── Indicateurs_COSO.xlsx            tous les indicateurs calculés
+│   │   └── Rapport_indicateurs_COSO.docx    rapport explicatif
+│   └── migone/                     affectations terrain + croisements MIGONE
+├── 05_docs/                        documents d'analyse
+│   ├── Indicteurs_COSO (1).xlsx    liste officielle des 21 indicateurs
+│   ├── Liste_indicateurs_COSO.docx liste détaillée des indicateurs + formules
+│   ├── codebook_QUESTIONNAIRE_VF_SANS_DOUBLON_VF.xlsx  (feuilles Variables/Codebook/Valeurs)
+│   └── Original Questionnaire_COSO_V5.html  libellés des questions et sauts
+└── 06_notes/                       notes méthodologiques (completude, rattrapage…)
 ```
 
-## Les bases du dossier `bases/`
+## Les bases du dossier `02_bases/`
 
-| Fichier | Lignes x Colonnes | Role |
+| Fichier | Lignes x Colonnes | Rôle |
 |---|---|---|
-| `Questionnaire_COSO_V4.dta` | 284 x 214 | protocole de depart (version 4) |
+| `Questionnaire_COSO_V4.dta` | 284 x 214 | protocole de départ (version 4) |
 | `Questionnaire_COSO_V5.dta` | 1032 x 218 | protocole final (version 5) |
-| `Questionnaire_COSO_VF.dta` | 1032 x 218 | base finale fusionnee V4+V5 |
-| `Questionnaire_COSO_TERMINES.dta` | 1032 x 220 | VF + statut termine / categorie |
+| `Questionnaire_COSO_VF.dta` | 1032 x 218 | base finale fusionnée V4+V5 |
 | `Questionnaire_COSO_VF_avec_statut.dta` | 1032 x 220 | VF + colonnes de statut |
-| `Questionnaire_COSO_UTILISABLES.dta` | 841 x 218 | VF filtree = interviews utilisables |
-| `Questionnaire_COSO_VF_avec_completude_logique.dta` | 1032 x 222 | VF + version intermediaire de completude |
-| `Questionnaire_COSO_VF_avec_completude.dta` | 1032 x 222 | **BASE FINALE** (taux + classe completude) |
+| `Questionnaire_COSO_TERMINES.dta` | 1032 x 220 | VF + statut terminé / catégorie |
+| `Questionnaire_COSO_UTILISABLES.dta` | 841 x 218 | VF filtrée = interviews utilisables |
+| `Questionnaire_COSO_VF_avec_completude_logique.dta` | 1032 x 222 | VF + version intermédiaire |
+| `Questionnaire_COSO_VF_avec_completude.dta` | 1032 x 222 | **BASE FINALE** (taux + classe) |
+| `QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta` | 962 x 218 | copie de travail = sortie du 06 |
 
-Toutes les cles (`interview__key`) de V5 sont identiques a VF ; TERMINES,
-STATUT et la base finale contiennent exactement les memes interviews que
-VF ; UTILISABLES est un sous-ensemble (841). La base V4 est un protocole
-separe (les identifiants finals proviennent de V5).
-
-Pour controler que tout est correct apres une manipulation :
+Contrôle après toute manipulation :
 
 ```bash
-python3 scripts/pipeline/03_lire_verifier_bases.py   # affiche [OK] ou [ERREUR] par base
+python3 03_pipeline/03_lire_verifier_bases.py    # affiche [OK] ou [ERREUR] par base
 ```
 
-## La base finale produit ce que vous avez demande
+## Étape clé : la base dédoublonnée
 
-`bases/Questionnaire_COSO_VF_avec_completude.dta` = la base complete (toutes
-les interviews, toutes les colonnes d'origine) **plus deux nouvelles colonnes**
-qui permettent de filtrer facilement :
-
-| colonne | sens | exemple |
-|---|---|---|
-| `taux_completude` | proportion de questions attendues remplies (0..1) | 0.98 = 98 % |
-| `classe_completude` | classe de completude | `1-COMPLET` |
-
-Classes possibles :
-`1-COMPLET` · `2-QUASI_COMPLET` · `3-MOYEN` · `4-INCOMPLET` · `5-VIDE`
-
-Exemple de filtre voulu (dans Stata, R, ou Excel) :
-- retenir uniquement les interviews totalement remplies :
-  `classe_completude == "1-COMPLET"`  →  627 interviews
-- retenir les interviews completes et quasi-completes (base "fiable") :
-  `classe_completude in {"1-COMPLET", "2-QUASI_COMPLET"}`  →  689 interviews
-
-## Bilan (1032 interviews)
+`04_resultats/traitement/QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta` (962 entretiens)
+est la base de départ de l'analyse des indicateurs. Les colonnes `taux_completude`
+et `classe_completude` permettent de filtrer :
 
 | classe | effectif | % |
-|---|---|---|
-| 1-COMPLET (100 %) | 627 | 60.8 % |
-| 2-QUASI_COMPLET (90-100 %) | 62 | 6.0 % |
-| 3-MOYEN (50-90 %) | 10 | 1.0 % |
-| 4-INCOMPLET (<50 %) | 291 | 28.2 % |
-| 5-VIDE (0 %) | 42 | 4.1 % |
+|---|---:|---:|
+| 1-COMPLET (100 %) | 613 | 63,7 % |
+| 2-QUASI_COMPLET (90–100 %) | 51 | 5,3 % |
+| 3-MOYEN (50–90 %) | 9 | 0,9 % |
+| 4-INCOMPLET (< 50 %) | 255 | 26,5 % |
+| 5-VIDE (0 %) | 34 | 3,5 % |
 
-Cela signifie que **627 interviews (60,8 %) sont totalement remplies** :
-toutes les questions qui devaient leur etre posees selon la logique du
-questionnaire ont ete repondues.
+Population analysée des indicateurs (étape 07) :
 
-## Robustesse de la methodologie
-
-Les regles de saut (skip logic) ont ete validees sur les **425 interviews de
-reference** (statut 100 et A4 = 1, donc validees par le superviseur et
-reellement conduites) :
-- mediane du taux = **1.000** (la moitie est exactement a 100 %) ;
-- **406 des 425** (95,5 %) sont exactement a 100 % ;
-- seulement **2** sont sous 90 %.
-
-Cela confirme que la logique implantee reproduit bien le questionnement
-reellement applique, et n'est pas trop stricte.
-
-## Detailler les manques (identifiants + questions)
-
-Le fichier `resultats/manquants_id_detail.xlsx` contient une ligne par couple
-*(interview, question manquante)* : classe de completude, nom de la question,
-`interview__id` et `interview__key`. Il permet de :
-- filtrer par classe (ex. `4-INCOMPLET` ou `5-VIDE`) ;
-- recuperer les identifiants des interviews a revoir / recontacter ;
-- compter, pour une question donnee, combien d'interviews la laissent vide.
-
-```python
-import pandas as pd
-d = pd.read_excel("resultats/manquants_id_detail.xlsx")
-ids_incompletes = d[d.classe == "4-INCOMPLET"]["interview__id"].unique()
+```
+classe_completude ∈ {1-COMPLET, 2-QUASI_COMPLET}  ET  consentement = 1
+→ 664 entretiens retenus au filtre de complétude, moins 1 sans consentement
+→ 663 candidats (613 complets + 50 quasi complets consentants)
 ```
 
-## Relancer le pipeline complet
+## Relancer la chaîne complète
 
 Depuis la racine du dossier :
 
 ```bash
-python3 scripts/pipeline/01_completude_logique.py   # recalcule et reecrit la base + CSV
-python3 scripts/pipeline/02_generer_notes.py        # relance le calcul puis reecrit Word/PDF
-python3 scripts/pipeline/06_pipeline_doublons.py    # dedoublonnage + fichiers de decision
+bash 03_pipeline/executer.sh        # étapes 01 → 11
+
+# ou étape par étape :
+python3 03_pipeline/01_completude_logique.py
+python3 03_pipeline/06_pipeline_doublons.py    # → QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta
+python3 03_pipeline/07_apurement_indicateurs.py
+python3 03_pipeline/08_calcul_indicateurs.py
+python3 03_pipeline/09_excel_indicateurs.py
+python3 03_pipeline/10_rapport_indicateurs.py
+python3 03_pipeline/11_verifier_indicateurs.py
 ```
+
+Prérequis : Python (`pandas`, `numpy`, `openpyxl`, `python-docx`) —
+interpréteur par défaut `/opt/anaconda3/bin/python3`, modifiable via `COSO_PYTHON`.
+Fermer le classeur Excel avant de relancer.
+
+## Sorties indicateurs
+
+| Fichier | Contenu |
+|---|---|
+| `04_resultats/indicateurs/Indicateurs_COSO.xlsx` | Synthèse · Modalités · Sous-groupes · Couverture 21 · Non calculables · Méthode |
+| `04_resultats/indicateurs/Rapport_indicateurs_COSO.docx` | Rapport Word : sources, règles de calcul, résultats par bloc, limites, reproductibilité |
+
+Les définitions, formules, populations et limites sont détaillées dans
+`03_pipeline/rapport_methodologique.md`.
 
 ## Affectation terrain (MIGONE)
 
 ```bash
-python3 scripts/terrain/creer_base_terrain.py       # CANDIDAT_ENQUETE_TERRAIN.xlsx
-python3 scripts/terrain/affectation_terrain.py      # AFFECTATION_COSO_TERRAIN_VF.xlsx
-python3 scripts/terrain/croisement_migone.py        # croisements dans MIGONE/resultats_croisement/
+python3 03_pipeline/terrain/creer_base_terrain.py    # CANDIDAT_ENQUETE_TERRAIN.xlsx
+python3 03_pipeline/terrain/affectation_terrain.py   # AFFECTATION_COSO_TERRAIN_VF.xlsx
+python3 03_pipeline/terrain/croisement_migone.py     # croisements dans 04_resultats/migone/
 ```
 
-- Enqueteurs : liste definitive `COMPTE_AGENT_COSO_VF.xlsx` (58 agents), avec
-  des enqueteurs a BOUNKANI (7) et TCHOLOGO (6) ; chaque region traite ses
-  propres candidats. Max 3 entretiens/enqueteur/jour.
-- 1024 candidats affectes en 13 jours ouvres (duree pilote par TCHOLOGO).
-- BOUNKANI (110) est desormais affecte a ses propres enqueteurs (6 jours),
-  au lieu d'etre reporte (V1) ou confie aux enqueteurs TCHOLOGO (V2).
+- Enquêteurs : liste définitive `COMPTE_AGENT_COSO_VF.xlsx` (58 agents) ;
+  chaque région traite ses propres candidats. Max 3 entretiens/enqueteur/jour.
+- 1024 candidats affectés en 13 jours ouvrés.
+- BOUNKANI (110) est affecté à ses propres enquêteurs (6 jours).
+
+## Robustesse de la méthodologie (complétude)
+
+Les règles de saut (skip logic) ont été validées sur les 425 interviews de
+référence (statut 100 et A4 = 1) : médiane du taux = 1,000 ; 406 des 425
+(95,5 %) à exactement 100 % ; seulement 2 sous 90 %. La logique implémentée
+reproduit bien le questionnement réellement appliqué.
+
+Le détail des manques (interview × question) reste disponible dans
+`04_resultats/traitement/manquants_id_detail.xlsx`.

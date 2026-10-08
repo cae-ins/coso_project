@@ -10,9 +10,9 @@ from docx.shared import Pt, Cm, RGBColor
 from docx.enum.table import WD_TABLE_ALIGNMENT
 
 ICI = os.path.dirname(os.path.abspath(__file__))
-RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_RES = os.path.join(RACINE, "resultats")
-DOSSIER_NOTE = os.path.join(RACINE, "notes")
+RACINE = os.path.dirname(ICI)                     # racine du dossier Data_After_Collecte_teleop
+DOSSIER_RES = os.path.join(RACINE, "04_resultats", "traitement")
+DOSSIER_NOTE = os.path.join(RACINE, "06_notes")
 
 base, meta = pyreadstat.read_dta(
     f"{DOSSIER_RES}/Questionnaire_COSO_VF_avec_completude.dta")

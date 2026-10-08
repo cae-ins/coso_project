@@ -17,8 +17,8 @@ import glob
 import pyreadstat
 
 ICI = os.path.dirname(os.path.abspath(__file__))
-RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_BASES = os.path.join(RACINE, "bases")
+RACINE = os.path.dirname(ICI)                     # racine du dossier Data_After_Collecte_teleop
+DOSSIER_BASES = os.path.join(RACINE, "02_bases")
 
 def lire(nom):
     """Lit une base .dta et retourne (dataframe, meta)."""
@@ -102,5 +102,5 @@ if fina is not None:
 
 print("=" * 75)
 print("Bilan : lire 03_ (ce script) et regarder les [OK] / [ERREUR].")
-print("Les 8 bases du dossier bases/ sont celles utilisees dans l'analyse.")
+print("Les 8 bases du dossier 02_bases/ sont celles utilisees dans l'analyse.")
 print("=" * 75)

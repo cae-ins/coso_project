@@ -6,16 +6,16 @@ Note courte (Word + PDF) : pourquoi les interviews sont incompletes
 (classes 4-INCOMPLET et 3-MOYEN) et comment les rattraper.
 
 Tous les chiffres sont recalcules a partir de la base finale
-resultats/Questionnaire_COSO_VF_avec_completude.dta.
+04_resultats/traitement/Questionnaire_COSO_VF_avec_completude.dta.
 """
 import os
 import pyreadstat
 import pandas as pd
 
 ICI = os.path.dirname(os.path.abspath(__file__))
-RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_RES  = os.path.join(RACINE, "resultats")
-DOSSIER_NOTE = os.path.join(RACINE, "notes")
+RACINE = os.path.dirname(ICI)                     # racine du dossier Data_After_Collecte_teleop
+DOSSIER_RES  = os.path.join(RACINE, "04_resultats", "traitement")
+DOSSIER_NOTE = os.path.join(RACINE, "06_notes")
 
 base, meta = pyreadstat.read_dta(
     f"{DOSSIER_RES}/Questionnaire_COSO_VF_avec_completude.dta")
@@ -143,7 +143,7 @@ CONTENU = [
     ("p",
      "Ouverture pratique : pour les interviews a relancer, la liste exacte des "
      "identifiants et des questions manquantes est dans le fichier "
-     "resultats/manquants_id_detail.xlsx (filtrer par classe puis par "
+     "04_resultats/traitement/manquants_id_detail.xlsx (filtrer par classe puis par "
      "interview__id)."),
 ]
 

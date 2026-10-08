@@ -13,9 +13,9 @@ import pandas as pd
 ICI = os.path.dirname(os.path.abspath(__file__))
 RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
 
-coso_vf, meta = pyreadstat.read_dta(os.path.join(RACINE, "resultats", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"))
-migone_data = pd.read_excel(os.path.join(RACINE, "inputs", "candidats_sans_bonne_fiche_20260922_restreint.xlsx"))
-teleop_data = pd.read_excel(os.path.join(RACINE, "inputs", "FICHIER PROJET COSO.xlsx"))
+coso_vf, meta = pyreadstat.read_dta(os.path.join(RACINE, "04_resultats", "traitement", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"))
+migone_data = pd.read_excel(os.path.join(RACINE, "01_sources", "candidats_sans_bonne_fiche_20260922_restreint.xlsx"))
+teleop_data = pd.read_excel(os.path.join(RACINE, "01_sources", "FICHIER PROJET COSO.xlsx"))
 
 print(coso_vf.columns) 
 print(migone_data.columns)

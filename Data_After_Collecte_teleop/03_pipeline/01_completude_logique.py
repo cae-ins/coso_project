@@ -20,7 +20,7 @@ Toutes les regles ci-dessous ont ete VALIDEES statistiquement sur les
 425 interviews de reference (statut 100 ET A4 = 1) : pour chaque question
 conditionnelle, elles correspondent a ce qui est observe dans les donnees.
 
-Sorties (dans le dossier ./resultats) :
+Sorties (dans le dossier ./04_resultats/traitement) :
   - Questionnaire_COSO_VF_avec_completude.dta  : base complete + 2 colonnes
         taux_completude   (0..1, pourcentage)
         classe_completude  (texte, pour filtrer)
@@ -37,9 +37,9 @@ import numpy as np
 #    Le script peut etre lance d'ici ou de la racine des donnees.
 # ---------------------------------------------------------------
 ICI = os.path.dirname(os.path.abspath(__file__))
-RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_BASE = os.path.join(RACINE, "bases")       # contient la base
-DOSSIER_RES  = os.path.join(RACINE, "resultats")
+RACINE = os.path.dirname(ICI)                     # racine du dossier Data_After_Collecte_teleop
+DOSSIER_BASE = os.path.join(RACINE, "02_bases")       # contient la base
+DOSSIER_RES  = os.path.join(RACINE, "04_resultats", "traitement")
 
 # ---------------------------------------------------------------
 # 1) OUTILS : comment reconnaitre une reponse "remplie" ?

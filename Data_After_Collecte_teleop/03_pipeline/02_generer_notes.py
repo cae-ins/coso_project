@@ -9,7 +9,7 @@ La note est centree sur la METHODOLOGIE et presente ses resultats sous
 forme de tableaux (intervalles de classification, statistiques de
 validation, repartition des interviews, lien avec la base utilisable).
 Le detail des questions manquantes par interview est renvoye vers le
-fichier Excel resultats/manquants_id_detail.xlsx.
+fichier Excel 04_resultats/traitement/manquants_id_detail.xlsx.
 
 Le script relance 01_completude_logique.py pour utiliser les chiffres
 a jour (et regenerer l'Excel ID+manque).
@@ -20,9 +20,9 @@ import pyreadstat
 import pandas as pd
 
 ICI = os.path.dirname(os.path.abspath(__file__))
-RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_RES  = os.path.join(RACINE, "resultats")
-DOSSIER_NOTE = os.path.join(RACINE, "notes")
+RACINE = os.path.dirname(ICI)                     # racine du dossier Data_After_Collecte_teleop
+DOSSIER_RES  = os.path.join(RACINE, "04_resultats", "traitement")
+DOSSIER_NOTE = os.path.join(RACINE, "06_notes")
 
 # ---------------------------------------------------------------
 # 0) RELANCE DU CALCUL (resultats et Excel a jour)

@@ -1,39 +1,0 @@
-Script started on Thu Sep 24 12:10:47 2026
-ls
-/opt/anaconda3/lib/python3.12/site-packages/pew/shell_config/init.zsh:2: command not found: compinit
-/Users/macbookair/.zshrc:.:43: no such file or directory: /Users/macbookair/.local/bin/env
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN Data_After_Collecte_teleop % [K[?2004hlls[?2004l
-COMPTE_AGENT_COSO_VF.xlsx	README.md			notes				typescript
-COSO_NUMERO_WAVE.xlsx		bases				resultats			~$COSO_NUMERO_WAVE.xlsx
-MIGONE				inputs				scripts
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN Data_After_Collecte_teleop % [K[?2004hccd src  cripts[1m/[0m[0m [?2004l
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN scripts % [K[?2004hlls[?2004l
-pipeline	terrain
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN scripts % [K[?2004hccd terrain[1m/[0m[0m [?2004l
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN terrain % [K[?2004hlls[?2004l
-affectation_terrain.py		creer_note_terrain.py		croisement_migone_jaures.py
-creer_base_terrain.py		croisement_migone.py
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN terrain % [K[?2004hccd c  ppython affectation_terrain.py[1m [0m[0m [?2004l
-Enqueteurs (liste definitive COMPTE_AGENT_COSO_VF) : 58 (Interviewer: 58)
-Regions couvertes : ['BAFING', 'BAGOUE', 'BERE', 'BOUNKANI', 'FOLON', 'GONTOUGO', 'KABADOUGOU', 'PORO', 'TCHOLOGO', 'WORODOUGOU']
-
-ECRIT -> /Users/macbookair/Desktop/CAE/COSO/COSO-repo/coso_project/Data_After_Collecte_teleop/MIGONE/outputs/AFFECTATION_COSO_TERRAIN_VF.xlsx
-Candidats affectes : 1024
-
-PLANNING PAR REGION (3 entretiens/enqueteur/jour) :
-    REGION  CANDIDATS  ENQUETEURS  JOURS  CAPACITE_JOUR  STATUT  JOUR_DEBUT  JOUR_FIN
-      PORO        116          10      4             30 AFFECTE         1.0       4.0
-    BAFING         45           6      3             18 AFFECTE         1.0       3.0
-  BOUNKANI        110           7      6             21 AFFECTE         1.0       6.0
-  TCHOLOGO        224           6     13             18 AFFECTE         1.0      13.0
-WORODOUGOU        118           5      8             15 AFFECTE         1.0       8.0
-  GONTOUGO        173           8      8             24 AFFECTE         1.0       8.0
-KABADOUGOU         48           3      6              9 AFFECTE         1.0       6.0
-      BERE         90           5      6             15 AFFECTE         1.0       6.0
-    BAGOUE         41           4      4             12 AFFECTE         1.0       4.0
-     FOLON         59           4      5             12 AFFECTE         1.0       5.0
-
-DUREE AU TOTAL (regions en parallele) : 13 jours ouvrés
-Charge totale : 1024 candidats = 341 journées-enqueteur
-============================================================
-[1m[7m%[27m[1m[0m                                                                                                                                 [0m[27m[24m[J(base) macbookair@MacBook-Air-de-Jaures-MANOUAN terrain % [K[?2004h

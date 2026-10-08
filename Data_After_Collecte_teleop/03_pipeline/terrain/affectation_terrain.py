@@ -20,9 +20,9 @@ import pandas as pd
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-SOURCE = os.path.join(RACINE, "inputs", "AFFECTATION COSO TERRAIN.xlsx")
+SOURCE = os.path.join(RACINE, "01_sources", "AFFECTATION COSO TERRAIN.xlsx")
 SOURCE_ENQ = os.path.join(RACINE, "COMPTE_AGENT_COSO_VF.xlsx")
-DEST = os.path.join(RACINE, "MIGONE", "outputs", "AFFECTATION_COSO_TERRAIN_VF.xlsx")
+DEST = os.path.join(RACINE, "04_resultats", "migone", "outputs", "AFFECTATION_COSO_TERRAIN_VF.xlsx")
 
 ENTRETIENS_PAR_ENQUETEUR_PAR_JOUR = 3
 

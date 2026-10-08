@@ -26,19 +26,19 @@ import pyreadstat
 # -------------------------------------------------------------------
 ICI = os.path.dirname(os.path.abspath(__file__))
 RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_RESULTATS = os.path.join(RACINE, "MIGONE", "resultats_croisement")
+DOSSIER_RESULTATS = os.path.join(RACINE, "04_resultats", "migone", "resultats_croisement")
 
 FICHIER_MIGONE = os.path.join(
-    RACINE, "inputs", "candidats_sans_bonne_fiche_20260922_restreint.xlsx"
+    RACINE, "01_sources", "candidats_sans_bonne_fiche_20260922_restreint.xlsx"
 )
-BASE_CONTACTS = os.path.join(RACINE, "inputs", "Base_Candidats_COSO_contactés.xlsx")
+BASE_CONTACTS = os.path.join(RACINE, "01_sources", "Base_Candidats_COSO_contactés.xlsx")
 BASE_SANS_DOUBLONS = os.path.join(
-    RACINE, "resultats", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"
+    RACINE, "04_resultats", "traitement", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"
 )
 BASE_COMPLETE = os.path.join(
-    RACINE, "resultats", "Questionnaire_COSO_VF_avec_completude.dta"
+    RACINE, "04_resultats", "traitement", "Questionnaire_COSO_VF_avec_completude.dta"
 )
-FICHIER_PROJET = os.path.join(RACINE, "inputs", "FICHIER PROJET COSO.xlsx")
+FICHIER_PROJET = os.path.join(RACINE, "01_sources", "FICHIER PROJET COSO.xlsx")
 
 os.makedirs(DOSSIER_RESULTATS, exist_ok=True)
 

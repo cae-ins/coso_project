@@ -6,7 +6,7 @@ PIPELINE DE DEDOUBLONNAGE + LIVRABLES
 
 Chaine complete :
   1) recalcul de la completude (relance 01_completude_logique.py,
-     qui reecrit resultats/Questionnaire_COSO_VF_avec_completude.dta)
+     qui reecrit 04_resultats/traitement/Questionnaire_COSO_VF_avec_completude.dta)
   2) detection des doublons (nom + telephone)
   3) constitution de la liste des EXCLUSIONS (343 retirees - 14 doublons)
   4) sorties :
@@ -25,8 +25,8 @@ import pandas as pd
 import pyreadstat
 
 ICI = os.path.dirname(os.path.abspath(__file__))
-RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
-DOSSIER_RES = os.path.join(RACINE, "resultats")
+RACINE = os.path.dirname(ICI)                     # racine du dossier Data_After_Collecte_teleop
+DOSSIER_RES = os.path.join(RACINE, "04_resultats", "traitement")
 
 def rempli(v):
     if v is None:
@@ -187,7 +187,7 @@ print(a_recontacter["classe_completude"].value_counts().to_string())
 print()
 print("=" * 70)
 print("PIPELINE TERMINE")
-print("Livrables dans resultats/ :")
+print("Livrables dans 04_resultats/traitement/ :")
 print("  - QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta   (base corrigee)")
 print("  - 329_a_retraiter_avec_consentement.xlsx")
 print("  - 114_a_recontacter.xlsx")
