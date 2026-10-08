@@ -122,14 +122,15 @@ python3 03_pipeline/11_verifier_indicateurs.py
 ```
 
 Prérequis : Python (`pandas`, `numpy`, `openpyxl`, `python-docx`) —
-interpréteur par défaut `/opt/anaconda3/bin/python3`, modifiable via `COSO_PYTHON`.
+interpréteur par défaut `/opt/anaconda3/bin/python3` s'il existe, sinon `python3`;
+modifiable via `COSO_PYTHON`.
 Fermer le classeur Excel avant de relancer.
 
 ## Sorties indicateurs
 
 | Fichier | Contenu |
 |---|---|
-| `04_resultats/indicateurs/Indicateurs_COSO.xlsx` | Synthèse · Modalités · Sous-groupes · Couverture 21 · Non calculables · Méthode |
+| `04_resultats/indicateurs/Indicateurs_COSO.xlsx` | 7 feuilles : Methode · Synthese_globale · Modalites · Sous_groupes · Couverture_21 · Non_calculables · Meta |
 | `04_resultats/indicateurs/Rapport_indicateurs_COSO.docx` | Rapport Word : sources, règles de calcul, résultats par bloc, limites, reproductibilité |
 
 Les définitions, formules, populations et limites sont détaillées dans
