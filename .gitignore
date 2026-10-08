@@ -48,3 +48,9 @@ AGENTS.md
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Pipelines Python
+**/__pycache__/
+
+# Sorties dérivées des indicateurs (régénérées par executer.sh)
+Data_After_Collecte_teleop/04_resultats/**/*.json
