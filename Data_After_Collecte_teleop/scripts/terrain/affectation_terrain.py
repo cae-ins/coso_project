@@ -5,68 +5,73 @@ Repartit les candidats de chaque region entre les enqueteurs de cette
 region (repartition equitable, groupes par localite), en planifiant
 3 entretiens par enqueteur et par jour, puis estime la duree.
 
-Deux fichiers produits :
-  1. AFFECTATION_COSO_TERRAIN_PLANIFIEE.xlsx : BOUNKANI sans enqueteur,
-     marque "A PLANIFIER ULTERIEUREMENT".
-  2. AFFECTATION_COSO_TERRAIN_BOUNKANI_TCHOLOGO.xlsx : les 110 BOUNKANI
-     sont affectes aux enqueteurs du TCHOLOGO.
+La liste definitive des enqueteurs est COMPTE_AGENT_COSO_VF.xlsx
+(des enqueteurs existent desormais a BOUNKANI et a TCHOLOGO) ; chaque
+region traite donc ses propres candidats. Un seul fichier est produit :
+   AFFECTATION_COSO_TERRAIN_VF.xlsx
+Cette mise a jour remplace les anciennes versions V1 (BOUNKANI reporte)
+et V2 (BOUNKANI confie aux enqueteurs du TCHOLOGO).
 """
 
 import os
 import math
+import unicodedata
 import pandas as pd
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 RACINE = os.path.dirname(os.path.dirname(ICI))     # racine du projet
 SOURCE = os.path.join(RACINE, "inputs", "AFFECTATION COSO TERRAIN.xlsx")
-DEST1 = os.path.join(RACINE, "MIGONE", "outputs", "AFFECTATION_COSO_TERRAIN_PLANIFIEE.xlsx")
-DEST2 = os.path.join(RACINE, "MIGONE", "outputs", "AFFECTATION_COSO_TERRAIN_BOUNKANI_TCHOLOGO.xlsx")
+SOURCE_ENQ = os.path.join(RACINE, "COMPTE_AGENT_COSO_VF.xlsx")
+DEST = os.path.join(RACINE, "MIGONE", "outputs", "AFFECTATION_COSO_TERRAIN_VF.xlsx")
 
 ENTRETIENS_PAR_ENQUETEUR_PAR_JOUR = 3
-REGION_BOUNKANI = "BOUNKANI"
-REGION_SUPPORT = "TCHOLOGO"
+
+
+def nettoyer_region(serie):
+    """Normalise les regions : minuscules/accents/fullwidth -> majuscules ASCII."""
+    return (serie.astype(str)
+                 .str.strip()
+                 .str.upper()
+                 .apply(lambda x: unicodedata.normalize("NFD", x)
+                        .encode("ascii", "ignore").decode("ascii"))
+                 .str.strip())
 
 
 def nettoyer_candidats(cands):
     cands = cands.copy()
     cands.columns = [str(c).strip() for c in cands.columns]
-    cands["REGION"] = cands["REGION"].astype(str).str.strip()
+    cands["REGION"] = nettoyer_region(cands["REGION"])
     return cands
 
 
-def nettoyer_enqueteurs(xl):
-    enq = pd.read_excel(xl, sheet_name="enqueteurs", header=4)
-    enq = enq[["NOM", "ROLE", "EMAIL", "CONTACT", "REGION"]].dropna(subset=["NOM"])
+def nettoyer_enqueteurs(nf):
+    """Lit la liste definitive des enqueteurs (COMPTE_AGENT_COSO_VF.xlsx)."""
+    enq = pd.read_excel(nf, sheet_name="Compte agents", header=0)
+    enq = enq[["fullname", "role", "phonenumber", "Email", "Région"]].dropna(subset=["fullname"])
     enq.columns = ["nom", "role", "email", "contact", "region"]
     enq["nom"] = enq["nom"].astype(str).str.strip()
     enq["role"] = enq["role"].astype(str).str.strip()
-    enq["region"] = enq["region"].astype(str).str.strip()
-    enq["region"] = enq["region"].str.upper().str.strip().str.replace("  +", " ", regex=True)
+    enq["email"] = enq["email"].astype(str).str.strip()
+    enq["contact"] = enq["contact"].astype(str).str.strip()
+    enq["region"] = nettoyer_region(enq["region"])
+    # seuls les agents affectes a une region font le terrain (exclut le compte admin)
+    enq = enq[enq["region"].notna() & (enq["region"] != "") & (enq["region"] != "NAN")]
     return enq
 
 
-def affecter(cands, enq_total, bounkani_sur_tchologo=False):
-    """Repartit les candidats. Si bounkani_sur_tchologo, la region BOUNKANI
-    est affectee aux enqueteurs de REGION_SUPPORT apres leur charge locale ;
-    sinon elle est mise de cote."""
+def affecter(cands, enq_total):
+    """Repartit les candidats de chaque region entre les enqueteurs de cette
+    region (repartition equitable, groupes par localite)."""
     res_affect = []
     plan_lignes = []
-
-    remap = {REGION_BOUNKANI: REGION_SUPPORT} if bounkani_sur_tchologo else {}
-    # ordre de traitement : BOUNKANI en dernier quand il est remappe (au dela
-    # de la charge locale des enqueteurs TCHOLOGO)
-    regions = [r for r in cands["REGION"].unique()]
-    if bounkani_sur_tchologo and REGION_BOUNKANI in regions:
-        regions = [r for r in regions if r != REGION_BOUNKANI] + [REGION_BOUNKANI]
 
     # compteur de sequençage par enqueteur (rang et jour cumules sur toutes ses
     # affectations) pour ne jamais depasser ENTRETIENS_PAR_ENQUETEUR_PAR_JOUR
     seq = {}
 
-    for region in regions:
+    for region in cands["REGION"].unique():
         grp = cands[cands["REGION"] == region]
-        region_eq = remap.get(region, region)
-        penq = enq_total[enq_total["region"] == region_eq]
+        penq = enq_total[enq_total["region"] == region]
         n_cand = len(grp)
 
         if not penq.empty:
@@ -96,14 +101,10 @@ def affecter(cands, enq_total, bounkani_sur_tchologo=False):
                         "JOUR": jours_region_ok,
                     })
             jours = math.ceil(n_cand / (n_enq * ENTRETIENS_PAR_ENQUETEUR_PAR_JOUR))
-            if region == REGION_BOUNKANI and bounkani_sur_tchologo:
-                statut = "AFFECTE (BOUNKANI -> TCHOLOGO, apres charge locale)"
-            else:
-                statut = "AFFECTE"
             plan_lignes.append({
                 "REGION": region, "CANDIDATS": n_cand, "ENQUETEURS": n_enq,
                 "JOURS": jours, "CAPACITE_JOUR": n_enq * ENTRETIENS_PAR_ENQUETEUR_PAR_JOUR,
-                "STATUT": statut,
+                "STATUT": "AFFECTE",
             })
         else:
             # region sans enqueteur : non affectee
@@ -186,18 +187,14 @@ def ecrire(dest, affect, plan):
 
 
 # ------------------------------------------------------------------ main
-xl = pd.ExcelFile(SOURCE)
-enq_total = nettoyer_enqueteurs(xl)
-cands = nettoyer_candidats(pd.read_excel(xl, sheet_name="enquetés"))
+cands = nettoyer_candidats(pd.read_excel(SOURCE, sheet_name="enquetés"))
+enq_total = nettoyer_enqueteurs(SOURCE_ENQ)
 
-print(f"Enqueteurs : {len(enq_total)} ({len(enq_total[enq_total['role']=='Facilitateur'])} "
-      f"facilitateurs, {len(enq_total[enq_total['role']=='Supervision'])} superviseurs)")
+roles = enq_total["role"].value_counts()
+print(f"Enqueteurs (liste definitive COMPTE_AGENT_COSO_VF) : {len(enq_total)} "
+      f"({', '.join(f'{k}: {v}' for k, v in roles.items())})")
+print(f"Regions couvertes : {sorted(enq_total['region'].unique())}")
 print()
 
-# Version 1 : BOUNKANI mis de cote
-affect1, plan1 = affecter(cands, enq_total, bounkani_sur_tchologo=False)
-ecrire(DEST1, affect1, plan1)
-
-# Version 2 : BOUNKANI affecte aux enqueteurs du TCHOLOGO
-affect2, plan2 = affecter(cands, enq_total, bounkani_sur_tchologo=True)
-ecrire(DEST2, affect2, plan2)
+affect, plan = affecter(cands, enq_total)
+ecrire(DEST, affect, plan)

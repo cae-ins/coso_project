@@ -39,8 +39,7 @@ Data_After_Collecte_teleop/
 ├── notes/                     <- notes Word/PDF/LaTeX de l'analyse
 └── MIGONE/
     ├── outputs/               <- affectations terrain + base candidate enquete
-    │   ├── AFFECTATION_COSO_TERRAIN_PLANIFIEE.xlsx  (V1 : BOUNKANI reporte)
-    │   ├── AFFECTATION_COSO_TERRAIN_BOUNKANI_TCHOLOGO.xlsx  (V2 : BOUNKANI->TCHOLOGO)
+    │   ├── AFFECTATION_COSO_TERRAIN_VF.xlsx  (liste definitive COMPTE_AGENT_COSO_VF)
     │   ├── CANDIDAT_ENQUETE_TERRAIN.xlsx
     │   └── QUESTIONNAIRE_VF_SANS_DOUBLON_VF.xlsx
     └── resultats_croisement/ <- croisements MIGONE (csv 01-06, xlsx 07-11, note)
@@ -145,11 +144,13 @@ python3 scripts/pipeline/06_pipeline_doublons.py    # dedoublonnage + fichiers d
 
 ```bash
 python3 scripts/terrain/creer_base_terrain.py       # CANDIDAT_ENQUETE_TERRAIN.xlsx
-python3 scripts/terrain/affectation_terrain.py      # V1 + V2 dans MIGONE/outputs/
+python3 scripts/terrain/affectation_terrain.py      # AFFECTATION_COSO_TERRAIN_VF.xlsx
 python3 scripts/terrain/croisement_migone.py        # croisements dans MIGONE/resultats_croisement/
 ```
 
-- 58 enqueteurs (48 facilitateurs + 10 superviseurs), max 3 entretiens/jour.
-- V1 : 914 candidats affectes en 8 jours ouvres, BOUNKANI (110) reporte.
-- V2 : 1024 candidats en 9 jours, BOUNKANI confie aux enqueteurs TCHOLOGO
-  (jours 6-9) apres leur charge locale.
+- Enqueteurs : liste definitive `COMPTE_AGENT_COSO_VF.xlsx` (58 agents), avec
+  des enqueteurs a BOUNKANI (7) et TCHOLOGO (6) ; chaque region traite ses
+  propres candidats. Max 3 entretiens/enqueteur/jour.
+- 1024 candidats affectes en 13 jours ouvres (duree pilote par TCHOLOGO).
+- BOUNKANI (110) est desormais affecte a ses propres enqueteurs (6 jours),
+  au lieu d'etre reporte (V1) ou confie aux enqueteurs TCHOLOGO (V2).
