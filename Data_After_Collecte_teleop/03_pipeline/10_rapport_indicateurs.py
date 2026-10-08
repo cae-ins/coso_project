@@ -48,7 +48,7 @@ CHAINE = [
     ("04", "Note « Pourquoi incomplètes »", "06_notes/…manques.docx"),
     ("05", "Fichier de rattrapage terrain + note", "05_docs/ + 06_notes/"),
     ("06", "Pipeline de dédoublonnage", "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta (962)"),
-    ("07", "Apurement : population analysée, dérivés, audit", "base_apuree.csv (663) + meta_apurement.json"),
+    ("07", "Apurement : population analysée, dérivés, audit", "base_apuree.csv (664) + meta_apurement.json"),
     ("08", "Calcul des indicateurs et sous-groupes", "indicateurs.json"),
     ("09", "Classeur Excel multi-feuilles", "Indicateurs_COSO.xlsx"),
     ("10", "Rapport Word explicatif (ce document)", "Rapport_indicateurs_COSO.docx"),
@@ -150,7 +150,7 @@ def produire(payload: dict, sortie: Path = SORTIE) -> None:
     non_calc = payload["non_calculables"]
     meta = payload["metadata"]
     ensemble = [l for l in lignes if l["niveau"] == "Ensemble"]
-    n = meta.get("n_apures", 663)
+    n = meta.get("n_apures", 664)
 
     doc = Document()
     section = doc.sections[0]
@@ -170,7 +170,7 @@ def produire(payload: dict, sortie: Path = SORTIE) -> None:
     _police(sous, 11, italique=True, couleur=GRIS)
 
     _tableau(doc, ["Élément", "Valeur"], [
-        ["Population analysée", f"{n} candidats (complétude 1 ou 2, consentement = 1)"],
+        ["Population analysée", f"{n} candidats (complétude 1-COMPLET ou 2-QUASI_COMPLET)"],
         ["Source", "02_bases/QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta"],
         ["Empreinte SHA-256 de la source",
          str(meta.get("sha256_source", ""))[:32] + "…"],
@@ -192,9 +192,9 @@ def produire(payload: dict, sortie: Path = SORTIE) -> None:
                 "La source est le questionnaire dédoublonné "
                 "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta (962 entretiens), issu du pipeline de "
                 "dédoublonnage. Le filtre de population — classe de complétude "
-                "1-COMPLET ou 2-QUASI_COMPLET et consentement = 1 — retient 664 entretiens, "
-                "dont 663 après exclusion d'un entretien sans consentement. Toutes les "
-                "décompositions de ce rapport portent sur ces 663 candidats, sauf mention "
+                "1-COMPLET ou 2-QUASI_COMPLET — retient 664 entretiens. Le consentement "
+                "n'est pas filtré : une complétude COMPLET ou QUASI suffit. Toutes les "
+                "décompositions de ce rapport portent sur ces 664 candidats, sauf mention "
                 "explicite d'un dénominateur propre.")
     _paragraphe(doc,
                 "Aucune donnée nominative (nom, téléphone, noms propres de répondants) "
@@ -256,7 +256,7 @@ def produire(payload: dict, sortie: Path = SORTIE) -> None:
                 "principale de chaque indicateur du bloc et, le cas échéant, la répartition "
                 "par modalité. « Eff. / Dénom. » rappelle le numérateur et le dénominateur "
                 "propres à la mesure : les questions posées sous condition de saut ou "
-                "restreintes à une sous-population ont un dénominateur inférieur à 663. "
+                f"restreintes à une sous-population ont un dénominateur inférieur à {n}. "
                 "Les lignes sans numérateur (médianes) affichent dans la dernière colonne "
                 "le nombre de valeurs utilisées.")
     ordre = sorted({l["bloc"] for l in ensemble})
@@ -329,7 +329,7 @@ def produire(payload: dict, sortie: Path = SORTIE) -> None:
                 "Le classeur Excel décline tous les indicateurs selon six niveaux "
                 "d'agrégation — Ensemble, district, région, sexe, groupe d'âge, milieu — "
                 "soit 23 groupes au total. Chaque ligne du classeur porte le nom du groupe "
-                "et sa taille : c'est cette taille, et non 663, qui sert de dénominateur.")
+                f"et sa taille : c'est cette taille, et non {n}, qui sert de dénominateur.")
     _tableau(doc, ["Niveau", "Clé", "Effectif", "Part de l'ensemble"],
              [[cle[0], " · ".join(str(x) for x in cle[1:] if x) or "Ensemble",
                str(n_groupe), f"{100 * n_groupe / n:.1f} %".replace(".", ",")]
@@ -390,7 +390,8 @@ def produire(payload: dict, sortie: Path = SORTIE) -> None:
         "1.1, 1.2 et 1.3 restent en attente : leur valeur définitive dépend du registre "
         "d'enrôlement, des statuts de sélection et de la convention de dénominateur "
         "arrêtée par le projet.",
-        "Qualité de collecte : 71 signalements d'incohérence sur 663 entretiens "
+        f"Qualité de collecte : {meta.get('n_signalements', 71)} signalements "
+                f"d'incohérence sur {n} entretiens "
         "ont été audités à l'étape 07 (âge, dates hors parcours, heures, montants "
         "non quantifiés) ; les entretiens sont conservés, les valeurs non "
         "vraisemblables sont laissées vides, jamais corrigées.",

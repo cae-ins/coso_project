@@ -87,7 +87,7 @@ FAMILLES_OBSTACLE = [
 
 COUVERTURE = [
     {"code": "1.1", "indicateur": "Jeunes enrôlés", "statut": "en attente",
-     "limite": "Dénominateur à convenir : la base d'enquête compte 663 entretiens "
+     "limite": "Dénominateur à convenir : la base d'enquête compte 664 entretiens "
                "utilisables (962 entretiens bruts) ; le registre d'enrôlement fait foi."},
     {"code": "1.2", "indicateur": "Sélectionnés ayant démarré une formation",
      "statut": "en attente",
@@ -95,7 +95,7 @@ COUVERTURE = [
                "le proxy O3 (formation générale des 12 derniers mois) n'est pas équivalent."},
     {"code": "1.3", "indicateur": "Femmes parmi les sélectionnés", "statut": "en attente",
      "limite": "Statut de sélection absent ; par identité de définition la part des femmes "
-               "parmi les répondants est fournie en D1.1 (227/663)."},
+               "parmi les répondants est fournie en D1.1."},
     {"code": "1.4", "indicateur": "Bénéficiaires de zones enclavées", "statut": "indisponible",
      "limite": "Statut de sélection et référentiel officiel des localités enclavées requis "
                "(B5 = rural n'est pas une mesure d'enclavement)."},
@@ -223,7 +223,7 @@ def calculer(base: Path = BASE, meta_path: Path = META) -> dict:
     d = pd.read_csv(base)
     if d.interview__key.isna().any() or d.interview__key.duplicated().any():
         raise ValueError("Identifiant d'entretien absent ou dupliqué dans la base apurée.")
-    if not d.classe_completude.isin(["1-COMPLET", "2-QUASI_COMPLET"]).all() or not d.consentement.eq(1).all():
+    if not d.classe_completude.isin(["1-COMPLET", "2-QUASI_COMPLET"]).all():
         raise ValueError("La base apurée contient un entretien hors population.")
     meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
     d = _preparer(d)
@@ -281,7 +281,7 @@ def calculer(base: Path = BASE, meta_path: Path = META) -> dict:
         sans_emploi = g.emploi_calcule.eq(0)
         salarie = en_emploi & g.F1.eq(1)
         independant = en_emploi & g.F1.isin([2, 3, 4])
-        emit("D1.0", "Candidats retenus (population analysée)", "classe_completude,consentement",
+        emit("D1.0", "Candidats retenus (population analysée)", "classe_completude",
              n, None, "personnes")
 
         # — D1 · Profil —

@@ -63,18 +63,20 @@ def controler_base() -> dict:
               f"n_source={meta['n_source']}")
     controler("Étape 07 : 664 après complétude",
               meta["n_apres_completude"] == 664, str(meta["n_apres_completude"]))
-    controler("Étape 07 : 663 candidats analysés", meta["n_apures"] == 663,
-              str(meta["n_apures"]))
+    controler("Étape 07 : 664 candidats analysés (consentement non filtré)",
+              meta["n_apures"] == 664, str(meta["n_apures"]))
+    controler("Étape 07 : 1 refus de consentement inclus (informatif)",
+              meta.get("n_consentement_refuses_inclus") == 1,
+              str(meta.get("n_consentement_refuses_inclus")))
     controler("Étape 07 : 71 signalements", meta["n_signalements"] == 71,
               str(meta["n_signalements"]))
     controler("Étape 07 : 61 entretiens signalés",
               meta["n_entretiens_signales"] == 61, str(meta["n_entretiens_signales"]))
-    controler("Base apurée : 663 lignes, identifiants uniques",
-              len(d) == 663 and d.interview__key.is_unique,
+    controler("Base apurée : 664 lignes, identifiants uniques",
+              len(d) == 664 and d.interview__key.is_unique,
               f"{len(d)} lignes")
-    controler("Base apurée : population homogeneous",
-              d.classe_completude.isin(["1-COMPLET", "2-QUASI_COMPLET"]).all()
-              and d.consentement.eq(1).all())
+    controler("Base apurée : population homogeneous (complétude 1 ou 2)",
+              d.classe_completude.isin(["1-COMPLET", "2-QUASI_COMPLET"]).all())
     controler("Base apurée : aucune colonne nominative",
               not any(PII_COLONNES.match(str(c)) for c in d.columns),
               str([c for c in d.columns if PII_COLONNES.match(str(c))]))
@@ -84,8 +86,8 @@ def controler_base() -> dict:
     controler("Durée : 515 entretiens dans [1 ; 600] min, médiane 23,4",
               len(duree) == 515 and abs(duree.median() - 23.4) <= 0.1,
               f"n={len(duree)}, médiane={duree.median()}")
-    controler("Emploi : 600 en emploi, 63 sans emploi",
-              int(d.emploi_calcule.eq(1).sum()) == 600
+    controler("Emploi : 601 en emploi, 63 sans emploi",
+              int(d.emploi_calcule.eq(1).sum()) == 601
               and int(d.emploi_calcule.eq(0).sum()) == 63)
     sans = d[d.emploi_calcule.eq(0)]
     controler("Emploi : F1 sur ses 7 modalités officielles",
@@ -146,8 +148,8 @@ def controler_additivite(payload: dict) -> None:
     groupes = df[df.niveau != "Ensemble"].drop_duplicates(
         ["niveau", "groupe"] if "groupe" in df.columns else ["niveau"])
     tailles = groupes.groupby("niveau")["n_groupe"].sum()
-    controler("Sous-groupes : chaque niveau totalise 663",
-              all(tailles.get(n, 0) == 663 for n in
+    controler("Sous-groupes : chaque niveau totalise 664",
+              all(tailles.get(n, 0) == 664 for n in
                   ["District", "Région", "Sexe", "Âge", "Milieu"]),
               str(tailles.to_dict()))
     for niveau in ["District", "Région", "Sexe", "Âge", "Milieu"]:
@@ -172,16 +174,16 @@ def controler_reperes(payload: dict) -> None:
     e = { (l["code"], l["modalite"]): l for l in _lignes(payload)
           if l["niveau"] == "Ensemble"}
     attendus = [
-        (("D1.1", "Femme"), 227, 663, "%"),
-        (("D3.1", "En emploi"), 600, 663, "%"),
+        (("D1.1", "Femme"), 228, 664, "%"),
+        (("D3.1", "En emploi"), 601, 664, "%"),
         (("D5.4", ""), 23, 63, "%"),
-        (("D8.1", ""), 135, 663, "%"),
-        (("D10.1", ""), 271, 663, "%"),
+        (("D8.1", ""), 135, 664, "%"),
+        (("D10.1", ""), 272, 664, "%"),
         (("D10.9", ""), 378, 612, "%"),
-        (("D9.5", ""), 111, 663, "%"),
-        (("D9.6", ""), 520, 663, "%"),
-        (("D9.7", ""), 32, 663, "%"),
-        (("D6.2", ""), 296, 326, "%"),
+        (("D9.5", ""), 112, 664, "%"),
+        (("D9.6", ""), 520, 664, "%"),
+        (("D9.7", ""), 32, 664, "%"),
+        (("D6.2", ""), 297, 327, "%"),
     ]
     for cle, effet, denom, unite in attendus:
         l = e.get(cle)
@@ -222,7 +224,7 @@ def controler_excel(payload: dict) -> None:
                                          "Non_calculables")))
 
 
-def controler_word() -> None:
+def controler_word(n: int = 664) -> None:
     if not controler("Word : fichier présent", DOCX.exists()):
         return
     with zipfile.ZipFile(DOCX) as paquet:
@@ -241,7 +243,7 @@ def controler_word() -> None:
               str(len(doc.tables)))
     corps = "\n".join(textes)
     corps += "\n".join(c.text for t in doc.tables for r in t.rows for c in r.cells)
-    controler("Word : population annoncée = 663", "663" in corps)
+    controler(f"Word : population annoncée = {n}", str(n) in corps)
     controler("Word : aucune donnée nominative", not PII_TEXTE.search(corps))
 
 
@@ -252,13 +254,13 @@ if __name__ == "__main__":
     if not controler("Base apurée présente", BASE.exists()):
         print(f"\n{controles} contrôles, {len(echecs)} échec(s).")
         sys.exit(1)
-    controler_base()
+    meta_n = controler_base()["n_apures"]
     charge = json.loads(JSON_INDI.read_text(encoding="utf-8"))
     controler_structure(charge)
     controler_additivite(charge)
     controler_reperes(charge)
     controler_excel(charge)
-    controler_word()
+    controler_word(meta_n)
 
     print(f"\n{controles} contrôles, {len(echecs)} échec(s).")
     if echecs:

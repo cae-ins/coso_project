@@ -3,7 +3,8 @@
 Entrée : 02_bases/QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta (962 entretiens)
 Sorties : 04_resultats/traitement/base_apuree.csv + meta_apurement.json
 
-Règle de population : classe_completude ∈ {1-COMPLET, 2-QUASI_COMPLET} ET consentement = 1.
+Règle de population : classe_completude ∈ {1-COMPLET, 2-QUASI_COMPLET}.
+Le consentement n'est pas filtré : une complétude COMPLET ou QUASI suffit.
 La source n'est jamais modifiée. Aucune donnée nominative (nom, téléphone) n'est exportée.
 """
 
@@ -84,7 +85,7 @@ def apurer(source: Path = SOURCE_DEFAUT, sortie: Path = SORTIE_DEFAUT,
         raise ValueError("Colonnes de complétude ou de consentement absentes.")
     completes = raw.classe_completude.isin(["1-COMPLET", "2-QUASI_COMPLET"])
     selection = raw.loc[completes]
-    gardes = selection.loc[selection.consentement.eq(1)].copy()
+    gardes = selection.copy()
     if gardes.interview__key.isna().any() or gardes.interview__key.duplicated().any():
         raise ValueError("Identifiant d'entretien absent ou dupliqué : résoudre avant calcul.")
 
@@ -169,7 +170,7 @@ def apurer(source: Path = SOURCE_DEFAUT, sortie: Path = SORTIE_DEFAUT,
         "n_source": int(len(raw)),
         "repartition_classes": {k: int(v) for k, v in raw.classe_completude.value_counts().items()},
         "n_apres_completude": int(len(selection)),
-        "n_exclus_sans_consentement": int(selection.consentement.ne(1).sum()),
+        "n_consentement_refuses_inclus": int(selection.consentement.ne(1).sum()),
         "n_apures": int(len(d)),
         "n_entretiens_signales": int(d.n_anomalies.gt(0).sum()),
         "n_signalements": int(d.n_anomalies.sum()),

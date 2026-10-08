@@ -46,9 +46,9 @@ METHODE = [
               "publiée comme zéro."),
     ("Source", "02_bases/QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta — 962 entretiens, copie de "
                "travail issue du pipeline de dédoublonnage (étape 06)."),
-    ("Population analysée", "classe_completude ∈ {1-COMPLET, 2-QUASI_COMPLET} ET "
-                            "consentement = 1 → 664 entretiens au filtre de complétude, "
-                            "moins 1 sans consentement = 663 candidats (étape 07)."),
+    ("Population analysée", "classe_completude ∈ {1-COMPLET, 2-QUASI_COMPLET} → "
+                            "664 candidats (étape 07). Le consentement n'est pas filtré : "
+                            "une complétude COMPLET ou QUASI suffit."),
     ("Proportion", "Part (%) = 100 × (réponses dans la modalité) / (réponses valides de la "
                    "population concernée). Le dénominateur propre à chaque question figure "
                    "dans la colonne « denominateur »."),

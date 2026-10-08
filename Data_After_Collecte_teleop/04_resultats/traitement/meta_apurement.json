@@ -1,0 +1,47 @@
+{
+  "source": "QUESTIONNAIRE_VF_SANS_DOUBLON_VF.dta",
+  "sha256_source": "cb51548495cd161cb94893bd2535efbf9264e5373c696931641bcbe9c5ae6732",
+  "n_source": 962,
+  "repartition_classes": {
+    "1-COMPLET": 613,
+    "4-INCOMPLET": 255,
+    "2-QUASI_COMPLET": 51,
+    "5-VIDE": 34,
+    "3-MOYEN": 9
+  },
+  "n_apres_completude": 664,
+  "n_consentement_refuses_inclus": 1,
+  "n_apures": 664,
+  "n_entretiens_signales": 61,
+  "n_signalements": 71,
+  "signalements_par_type": {
+    "AGE_IMPLAUSIBLE": 7,
+    "F1_HORS_PARCOURS": 1,
+    "F2_HORS_PARCOURS": 1,
+    "H2_HORS_PARCOURS": 3,
+    "H5_HORS_PARCOURS": 2,
+    "H5_NON_POSITIF": 4,
+    "J0_HORS_PARCOURS": 6,
+    "G6_HORS_PARCOURS": 2,
+    "G7A_HORS_PARCOURS": 3,
+    "CHOC_HORS_PARCOURS": 6,
+    "FORMATION_HORS_PARCOURS": 3,
+    "Q2_NON_QUANTIFIABLE": 33
+  },
+  "n_age_invalides": 7,
+  "duree_entretien": {
+    "n_mesurees": 659,
+    "n_dans_la_plage_1_600": 515,
+    "mediane_minutes": 23.4,
+    "n_hors_plage": 144
+  },
+  "n_h3_salaries": 30,
+  "n_h3_exacts": 25,
+  "n_h3_tranches": 30,
+  "n_h5_eligibles": 447,
+  "n_h5_exacts": 318,
+  "n_h5_tranches": 444,
+  "n_emploi": 601,
+  "n_sans_emploi": 63,
+  "mediane_taux_completude": 1.0
+}
